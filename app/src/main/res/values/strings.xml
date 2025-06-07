@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Skyblue Contacts</string>
+    <string name="contact_permission_denied_open_app_settings">Contact permission denied. Open app settings. to enable read contacts permission manually!</string>
+    <string name="call_permission_denied_open_app_settings">Call permission denied. Open app settings. to enable call permission manually!</string>
+    <string name="contacts_list">Contacts List</string>
+    <string name="sign_in">Sign In</string>
+    <string name="client_id"></string>
 </resources>
