@@ -1,0 +1,56 @@
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="10dp"
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@color/white"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:cardBackgroundColor="@color/shimmer_placeholder"
+            app:cardCornerRadius="50dp"
+            android:elevation="0dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="60dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/shimmer_placeholder"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_marginEnd="100dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/shimmer_placeholder"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#8C8C8C"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

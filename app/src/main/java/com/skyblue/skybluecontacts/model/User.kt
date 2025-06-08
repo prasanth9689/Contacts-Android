@@ -1,6 +1,9 @@
 package com.skyblue.skybluecontacts.model
 
-data class User (
-    val accId: String,
-    val userId: String
-)
+import java.util.Date
+
+class User {
+    var userId: String? = null
+    var userName: String? = null
+    var sessionExpiryDate: Date? = null
+}

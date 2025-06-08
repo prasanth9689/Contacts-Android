@@ -21,7 +21,19 @@
         android:theme="@style/Theme.SkyblueContacts"
         tools:targetApi="31">
         <activity
-                android:name=".CloudContactsActivity"
+            android:name=".activity.ImportContactsCsvActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ImportContactsVcfActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddContactManuallyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddContactsDeviceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CloudContactsActivity"
             android:exported="false" />
         <activity
             android:name=".MobileContactsActivity"

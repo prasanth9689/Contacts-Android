@@ -97,7 +97,7 @@ class MobileContactsActivity : AppCompatActivity() {
         }
 
         val listView: ListView = findViewById(R.id.contacts_list_view)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, contactsList.map { it.name })
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, contactsList.map { it.firstName })
         listView.adapter = adapter
 
         listView.setOnItemClickListener { _, _, position, _ ->
