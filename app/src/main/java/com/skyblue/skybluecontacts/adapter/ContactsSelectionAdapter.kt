@@ -44,6 +44,7 @@ class ContactsSelectionAdapter(
 
             contactLayout.setOnClickListener {
                 onItemClick(position)
+
             }
         }
     }

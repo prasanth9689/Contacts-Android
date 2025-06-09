@@ -61,9 +61,12 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("com.google.firebase:firebase-auth:23.2.1")
-    implementation("com.google.android.gms:play-services-auth:21.3.0")
-    implementation("com.google.firebase:firebase-auth")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.google.android.gms:play-services-identity:18.1.0")
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }

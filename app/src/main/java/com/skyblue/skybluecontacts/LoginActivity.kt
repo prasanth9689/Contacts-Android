@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,11 +15,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+//import com.google.firebase.FirebaseApp
+//import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.GoogleAuthProvider
 import com.skyblue.mya.SessionHandler
-import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
 import com.skyblue.skybluecontacts.model.Login
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
@@ -38,18 +38,13 @@ class LoginActivity : AppCompatActivity() {
     private val TAG = "GoogleSignIn_"
     private  lateinit var mGoogleSignInClient: GoogleSignInClient
     val requestCode = 123
-    private lateinit var firebaseAuth: FirebaseAuth
+//    private lateinit var firebaseAuth: FirebaseAuth
     lateinit var session: SessionHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val intent = Intent(context, AddContactsDeviceActivity::class.java)
-        startActivity(intent)
-        finish()
-        return
 
         session = SessionHandler
         session.init(this)
@@ -60,15 +55,15 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
-        FirebaseApp.initializeApp(context)
-
-        val googleSignInOption = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.client_id))
-            .requestEmail()
-            .build()
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
-        firebaseAuth = FirebaseAuth.getInstance()
+//        FirebaseApp.initializeApp(context)
+//
+//        val googleSignInOption = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.client_id))
+//            .requestEmail()
+//            .build()
+//
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
+//        firebaseAuth = FirebaseAuth.getInstance()
 
         onClick()
     }
@@ -104,19 +99,19 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun UpdateUI(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                showMessage("Google sign-in success")
-                binding.googleSignInLayout.visibility = View.GONE
-                binding.loginInitLayout.visibility = View.VISIBLE
-                loginNow(account.id.toString(), account.displayName.toString(), account.email.toString())
-            }
-        }
+//        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+//        firebaseAuth.signInWithCredential(credential).addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                showMessage("Google sign-in success")
+//                binding.googleSignInLayout.visibility = View.GONE
+//                binding.loginInitLayout.visibility = View.VISIBLE
+//                loginNow(account.id.toString(), account.displayName.toString(), account.email.toString())
+//            }
+//        }
     }
 
     data class UserResponse(
-        val user_id: String
+        val userId: String
     )
 
     private fun loginNow(googleId: String, displayName: String, email: String) {
@@ -141,8 +136,11 @@ class LoginActivity : AppCompatActivity() {
                     val status: Boolean = login?.status == "true"
 
                     if (status){
-                        val userId = login?.response?.getOrNull(0)?.user_id
+                        val userId = login?.response?.getOrNull(0)?.userId
                         if (login != null) {
+
+                            Log.e("Login_", userId.toString())
+
                                 session.loginUser(userId.toString(), displayName)
                                 val intent = Intent(context, CloudContactsActivity::class.java)
                                 intent.putExtra("userId", userId.toString())
@@ -171,4 +169,17 @@ class LoginActivity : AppCompatActivity() {
         snackbar.setTextColor(Color.WHITE)
         snackbar.show()
     }
+
+//    override fun onStart() {
+//        super.onStart()
+//        if (GoogleSignIn.getLastSignedInAccount(this) != null) {
+//            startActivity(
+//                Intent(
+//                    this, CloudContactsActivity
+//                    ::class.java
+//                )
+//            )
+//            finish()
+//        }
+//    }
 }

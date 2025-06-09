@@ -21,26 +21,40 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.adapter.ContactsSelectionAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityAddContactsDeviceBinding
+import com.skyblue.skybluecontacts.model.ContactPayload
 import com.skyblue.skybluecontacts.model.Contacts
 import com.skyblue.skybluecontacts.model.ContactsSelection
+import com.skyblue.skybluecontacts.model.User
+import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
 import com.skyblue.skybluecontacts.viewmodel.ContactsSelViewModel
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AddContactsDeviceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddContactsDeviceBinding
     private val viewModel: ContactsSelViewModel by viewModels()
     private lateinit var adapter: ContactsSelectionAdapter
-    private val contactsList: MutableList<Contacts> = mutableListOf()
+    private val contactsList: MutableList<ContactsSelection> = mutableListOf()
     val READ_CONTACTS_PERMISSION = "1"
     private val context = this
     val TAG = "AddContactsDevice_"
+    private var allSelected = false
+    lateinit var session: SessionHandler
+    lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddContactsDeviceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        session = SessionHandler
+        user = session.getUserDetails()!!
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.READ_CONTACTS), 1)
@@ -51,6 +65,12 @@ class AddContactsDeviceActivity : AppCompatActivity() {
 
         adapter = ContactsSelectionAdapter(emptyList()) { position ->
             viewModel.toggleSelection(position)
+
+            contactsList[position].isSelected = !contactsList[position].isSelected
+            adapter.notifyItemChanged(position)
+            val selectedCount = contactsList.count { it.isSelected }
+            binding.checkedContacts.text = selectedCount.toString()
+            //Toast.makeText(this, "Selected: $selectedCount", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -62,21 +82,43 @@ class AddContactsDeviceActivity : AppCompatActivity() {
             adapter.updateData(it)
         }
 
-//        viewModel.setContactsSelection(
-//            listOf(
-//                ContactsSelection("Prasanth", "8940570614"),
-//                ContactsSelection("Saradha", "9790246869"),
-//                ContactsSelection("Student", "9944076857")
-//            )
-//        )
-
         binding.btnShowSelected.setOnClickListener {
-            val selected = viewModel.getSelectedContacts()
-            Toast.makeText(context, "Selected: ${selected.size}", Toast.LENGTH_SHORT).show()
+            val selectedContacts = contactsList.filter { it.isSelected }
+            val payload = ContactPayload(
+                contacts = selectedContacts.map {
+                    Contacts(it.firstName, it.phoneNumber)
+                },
+                userId = user.userId.toString()
+            )
+
+            RetrofitInstance.apiInterface.sendContacts(payload)
+                .enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(this@AddContactsDeviceActivity, "Contacts sent successfully", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Log.e("SendContacts", "Error code: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.e("SendContacts", "Failure: ${t.message}")
+                    }
+                })
+
+//            val selected = viewModel.getSelectedContacts()
+//            Toast.makeText(context, "Selected: ${selected.size}", Toast.LENGTH_SHORT).show()
         }
 
         binding.back.setOnClickListener{
             finish()
+        }
+
+        binding.checkAll.setOnClickListener {
+            allSelected = !allSelected
+            contactsList.forEach { it.isSelected = allSelected }
+            adapter.updateData(contactsList)
+
         }
     }
 
@@ -112,7 +154,7 @@ class AddContactsDeviceActivity : AppCompatActivity() {
                     if (phoneCursor != null && phoneCursor.moveToFirst()) {
                         val phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(
                             ContactsContract.CommonDataKinds.Phone.NUMBER))
-                        contactsList.add(Contacts(name, phoneNumber))
+                        contactsList.add(ContactsSelection(name, phoneNumber))
                         phoneCursor.close()
                     }
                 }

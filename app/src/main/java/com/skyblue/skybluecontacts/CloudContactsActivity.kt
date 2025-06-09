@@ -1,5 +1,6 @@
 package com.skyblue.skybluecontacts
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityCloudContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
@@ -32,10 +34,12 @@ class CloudContactsActivity : AppCompatActivity() {
         binding = ActivityCloudContactsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loadBottomSheetDialog()
+     //   loadBottomSheetDialog()
 
         session = SessionHandler
         user = session.getUserDetails()!!
+
+        // Toast.makeText(context, "User: ${user.userId}", Toast.LENGTH_SHORT).show()
 
         adapter = ContactAdapter(emptyList())
         binding.recyclerView.adapter = adapter
@@ -43,7 +47,7 @@ class CloudContactsActivity : AppCompatActivity() {
 
         val jsonObject = JSONObject().apply {
             put("acc", "get_contacts")
-            put("userId", "22")
+            put("userId", user.userId)
         }
 
         val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -67,6 +71,10 @@ class CloudContactsActivity : AppCompatActivity() {
         }
 
         viewModel.fetchContacts(requestBody)
+
+        binding.addContacts.setOnClickListener {
+           loadBottomSheetDialog()
+        }
     }
 
     private fun loadBottomSheetDialog() {
@@ -75,7 +83,9 @@ class CloudContactsActivity : AppCompatActivity() {
         val view = binding.root
 
         binding.selectFrContact.setOnClickListener {
-            Toast.makeText(context, "Select from contacts", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, AddContactsDeviceActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         binding.addManually.setOnClickListener {
