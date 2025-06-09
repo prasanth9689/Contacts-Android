@@ -6,6 +6,6 @@ data class Login(
     val status: String,
     val message: String,
 
-    val response: List<LoginActivity.UserResponse>?
+    val response: List<UserResponse>?
 )
 
