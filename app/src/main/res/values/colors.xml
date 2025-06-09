@@ -5,4 +5,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#08273E</color>
     <color name="shimmer_placeholder">#dddddd</color>
+    <color name="selected_text_color">#000000</color>
+    <color name="default_text_color">#08273E</color>
+    <color name="selected_background_color">#dddddd</color>
 </resources>

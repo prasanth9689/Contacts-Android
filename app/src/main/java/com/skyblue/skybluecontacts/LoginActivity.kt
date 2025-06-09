@@ -18,6 +18,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
 import com.skyblue.skybluecontacts.model.Login
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
@@ -44,6 +45,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val intent = Intent(context, AddContactsDeviceActivity::class.java)
+        startActivity(intent)
+        finish()
+        return
 
         session = SessionHandler
         session.init(this)
