@@ -22,7 +22,6 @@ import com.skyblue.skybluecontacts.databinding.ActivityLogin2Binding
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-
 class LoginActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityLogin2Binding
     private var context: Context = this@LoginActivity2
@@ -73,6 +72,8 @@ class LoginActivity2 : AppCompatActivity() {
         Log.e("GoogleSignIn_", "Email: ${user?.email}")
         Log.e("GoogleSignIn_", "UID: ${user?.uid}")
         Log.e("GoogleSignIn_", "PhotoURL: ${user?.photoUrl}")
+
+       // Toast.makeText(context, user?.displayName , Toast.LENGTH_SHORT).show()
     }
 
     private fun handleSignIn(credential: Credential) {

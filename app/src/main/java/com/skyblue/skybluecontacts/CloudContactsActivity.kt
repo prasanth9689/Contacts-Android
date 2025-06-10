@@ -7,10 +7,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
+import com.skyblue.skybluecontacts.activity.DialPadActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityCloudContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
@@ -34,7 +37,7 @@ class CloudContactsActivity : AppCompatActivity() {
         binding = ActivityCloudContactsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-     //   loadBottomSheetDialog()
+        onClick()
 
         session = SessionHandler
         user = session.getUserDetails()!!
@@ -72,9 +75,38 @@ class CloudContactsActivity : AppCompatActivity() {
 
         viewModel.fetchContacts(requestBody)
 
+    }
+
+    private fun onClick() {
         binding.addContacts.setOnClickListener {
-           loadBottomSheetDialog()
+            loadBottomSheetDialog()
         }
+
+        binding.bottomNav.setOnItemSelectedListener {
+            when(it.itemId) {
+                R.id.home_menu -> openHome()
+                R.id.profile_menu -> loadBottomSheetDialog()
+                R.id.setting_menu -> loadBottomSheetDialog()
+            }
+            true
+        }
+
+        binding.openDialPad.setOnClickListener {
+          val intent = Intent(context, DialPadActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun openHome() {
+        val options = ActivityOptionsCompat.makeCustomAnimation(
+            context,
+           0,
+            0
+        )
+
+        val intent = Intent(context, CloudContactsActivity::class.java)
+        startActivity(intent, options.toBundle())
+        finish()
     }
 
     private fun loadBottomSheetDialog() {
@@ -85,11 +117,11 @@ class CloudContactsActivity : AppCompatActivity() {
         binding.selectFrContact.setOnClickListener {
             val intent = Intent(context, AddContactsDeviceActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         binding.addManually.setOnClickListener {
-            Toast.makeText(context, "Add manually", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, DialPadActivity::class.java)
+            startActivity(intent)
         }
 
         binding.importVcf.setOnClickListener {

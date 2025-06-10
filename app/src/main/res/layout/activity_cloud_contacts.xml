@@ -158,4 +158,30 @@
 
     </RelativeLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/openDialPad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:tint="@color/white"
+        app:backgroundTint="@color/primary"
+        android:src="@drawable/ic_dialpad"
+        android:contentDescription="Open dial pad"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="20dp"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:itemIconTint="@color/nav_item_state_list"
+        app:menu="@menu/menu"
+        app:labelVisibilityMode="unlabeled"
+        app:elevation="8dp"
+        />
+
 </RelativeLayout>

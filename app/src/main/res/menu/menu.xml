@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home_menu"
+        android:title="Test"
+        android:icon="@drawable/ic_home_custom"/>
+
+    <item
+        android:id="@+id/profile_menu"
+        android:title="Add Contacts"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_circle_custom"/>
+
+    <item
+        android:id="@+id/setting_menu"
+        android:title="Test"
+        android:icon="@drawable/ic_launcher_background"/>
+
+</menu>
