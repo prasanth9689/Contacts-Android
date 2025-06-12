@@ -1,15 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@color/white"
-    android:gravity="center_horizontal|bottom"
-    android:layout_centerHorizontal="true"
-    android:padding="20dp"
     tools:context=".activity.DialPadActivity">
+
+    <RelativeLayout
+        android:id="@+id/saveContact"
+        android:layout_width="match_parent"
+        android:background="#F5F8FB"
+        android:layout_height="40dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_save_contact_custom"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Save contact"
+                android:textStyle="bold"
+                android:textColor="@color/primary"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|bottom"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:padding="20dp"
+        android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -46,7 +86,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:orientation="horizontal">
@@ -54,8 +94,9 @@
         <ImageButton
             android:id="@+id/one"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_one"
             android:background="@null"
             android:foreground="?android:attr/selectableItemBackground"
@@ -64,8 +105,9 @@
         <ImageButton
             android:id="@+id/two"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_two"
             android:background="@null"
             android:foreground="?android:attr/selectableItemBackground"
@@ -74,7 +116,8 @@
         <ImageButton
             android:id="@+id/three"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_three"
             android:layout_weight="1"
             android:background="@null"
@@ -84,15 +127,16 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:layout_height="70dp"
+        android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/four"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:src="@drawable/ic_four"
             android:background="@null"
@@ -102,7 +146,8 @@
         <ImageButton
             android:id="@+id/five"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:src="@drawable/ic_five"
             android:background="@null"
@@ -112,7 +157,8 @@
         <ImageButton
             android:id="@+id/six"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_six"
             android:layout_weight="1"
             android:background="@null"
@@ -122,15 +168,16 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:layout_height="70dp"
+        android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/seven"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:src="@drawable/ic_seven"
             android:background="@null"
@@ -140,7 +187,8 @@
         <ImageButton
             android:id="@+id/eight"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:src="@drawable/ic_eight"
             android:background="@null"
@@ -150,7 +198,8 @@
         <ImageButton
             android:id="@+id/nine"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_nine"
             android:layout_weight="1"
             android:background="@null"
@@ -160,17 +209,17 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:layout_height="70dp"
+        android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/star"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:layout_marginTop="10dp"
             android:src="@drawable/ic_star"
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
@@ -179,7 +228,8 @@
         <ImageButton
             android:id="@+id/zero"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:src="@drawable/ic_zero"
             android:background="@color/white"
@@ -189,7 +239,8 @@
         <ImageButton
             android:id="@+id/hash"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_hash"
             android:layout_weight="1"
             android:background="@null"
@@ -210,6 +261,6 @@
         android:background="@null"
         android:foreground="?android:attr/selectableItemBackground"
         />
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </LinearLayout>
+</RelativeLayout>
 

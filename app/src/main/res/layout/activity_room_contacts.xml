@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/white"
+    android:background="#FDD0DF"
     tools:context=".CloudContactsActivity">
 
     <RelativeLayout
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <include layout="@layout/item_list_shimmer" />
             <include layout="@layout/item_list_shimmer" />
@@ -134,8 +134,7 @@
             android:background="@drawable/btn_search"
             app:queryBackground="@android:color/transparent"
             app:queryHint="Search contacts"
-            android:visibility="gone"
-           />
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

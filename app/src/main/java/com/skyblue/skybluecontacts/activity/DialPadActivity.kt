@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -25,6 +26,7 @@ class DialPadActivity : AppCompatActivity() {
     val context = this
     private var currentNumber = ""
     private val REQUEST_CALL_PERMISSION = 1
+    private val REQUEST_WRITE_PERMISSION = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,9 +116,11 @@ class DialPadActivity : AppCompatActivity() {
 
                 if (textLength == 0){
                     binding.delete.visibility = View.GONE
+                    binding.saveContact.visibility = View.GONE
                     return
                 }
                 binding.delete.visibility = View.VISIBLE
+                binding.saveContact.visibility = View.VISIBLE
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -138,6 +142,16 @@ class DialPadActivity : AppCompatActivity() {
                 currentNumber = mNUmber.toString()
                 Log.i("Del__", "Delete after available text: " + mNUmber.toString())
                 Log.i("Del__", "Global currentNumber: " + currentNumber)
+            }
+        }
+
+        binding.saveContact.setOnClickListener {
+            val mNumber = binding.number.text;
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT).show()
+            }else {
+                ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.WRITE_CONTACTS), REQUEST_WRITE_PERMISSION)
+                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
