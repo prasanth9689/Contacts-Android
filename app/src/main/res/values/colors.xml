@@ -8,4 +8,5 @@
     <color name="selected_text_color">#000000</color>
     <color name="default_text_color">#08273E</color>
     <color name="selected_background_color">#dddddd</color>
+    <color name="light_grey">#F9F9FA</color>
 </resources>

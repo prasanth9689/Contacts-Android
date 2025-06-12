@@ -1,16 +1,19 @@
 package com.skyblue.skybluecontacts
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.snackbar.Snackbar
 import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
@@ -86,7 +89,7 @@ class CloudContactsActivity : AppCompatActivity() {
             when(it.itemId) {
                 R.id.home_menu -> openHome()
                 R.id.profile_menu -> loadBottomSheetDialog()
-                R.id.setting_menu -> loadBottomSheetDialog()
+                R.id.setting_menu -> openSearch()
             }
             true
         }
@@ -95,6 +98,47 @@ class CloudContactsActivity : AppCompatActivity() {
           val intent = Intent(context, DialPadActivity::class.java)
             startActivity(intent)
         }
+
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = Rect()
+            binding.root.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = binding.root.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                // Keyboard is open
+                binding.bottomNav.visibility = View.GONE
+            } else {
+                // Keyboard is closed
+                binding.bottomNav.visibility = View.VISIBLE
+            }
+        }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.filter(newText.toString())
+                return false
+            }
+        })
+
+        viewModel.filteredItems.observe(this) { contacts ->
+            adapter.updateData(contacts)
+        }
+    }
+
+    private fun openSearch(){
+        binding.searchView.isIconified = false
+
+        binding.searchView.requestFocus()
+        binding.searchView.requestFocusFromTouch()
+
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun openHome() {

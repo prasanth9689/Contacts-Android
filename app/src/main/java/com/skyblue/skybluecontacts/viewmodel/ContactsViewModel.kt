@@ -13,8 +13,9 @@ import okhttp3.RequestBody
 class ContactsViewModel : ViewModel(){
     val TAG = "CloudContacts_"
     private val repository = ContactsRepository()
-
     private val _contacts = MutableLiveData<List<Contacts>>()
+    private val _filteredItems = MutableLiveData<List<Contacts>>()
+    val filteredItems: LiveData<List<Contacts>> get() = _filteredItems
     val contacts: LiveData<List<Contacts>> = _contacts
 
     fun fetchContacts(requestBody: RequestBody){
@@ -23,12 +24,27 @@ class ContactsViewModel : ViewModel(){
                 val contacts = repository.getContacts(requestBody)
                 if (contacts.status == "true") {
                     _contacts.value = contacts.response
+                    _filteredItems.value = contacts.response
                 } else {
                     _contacts.value = emptyList()
                     Log.e(TAG, contacts.message )
                 }
             } catch (e: Exception){
                 Log.e(TAG, "error: " + e.message.toString())
+            }
+        }
+    }
+
+    fun filter(query: String) {
+        val originalList = _contacts.value ?: return
+        val lowerQuery = query.lowercase()
+
+        _filteredItems.value = if (lowerQuery.isEmpty()) {
+            originalList
+        } else {
+            originalList.filter { item ->
+                item.firstName.contains(lowerQuery, ignoreCase = true) ||
+                        item.firstName.contains(lowerQuery, ignoreCase = true)
             }
         }
     }

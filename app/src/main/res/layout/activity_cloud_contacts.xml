@@ -85,7 +85,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <include layout="@layout/item_list_shimmer" />
             <include layout="@layout/item_list_shimmer" />
@@ -114,12 +115,35 @@
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="51dp"
-        android:visibility="gone"/>
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            app:iconifiedByDefault="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@drawable/btn_search"
+            app:queryBackground="@android:color/transparent"
+            app:queryHint="Search contacts"
+           />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/no_contacts_layout"
