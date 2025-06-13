@@ -29,9 +29,6 @@
             android:name=".activity.DialPadActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity2"
-            android:exported="false" />
-        <activity
             android:name=".activity.ImportContactsCsvActivity"
             android:exported="false" />
         <activity

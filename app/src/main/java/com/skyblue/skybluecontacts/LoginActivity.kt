@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
         session.init(this)
 
         if(session.isLoggedIn()){
-            val intent = Intent(context, CloudContactsActivity::class.java)
+            val intent = Intent(context, RoomContactsActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -174,7 +174,7 @@ class LoginActivity : AppCompatActivity() {
                             Log.e("Login_", userId.toString())
 
                                 session.loginUser(userId.toString(), displayName)
-                                val intent = Intent(context, CloudContactsActivity::class.java)
+                                val intent = Intent(context, RoomContactsActivity::class.java)
                                 intent.putExtra("userId", userId.toString())
                                 intent.putExtra("displayName", displayName)
                                 startActivity(intent)
@@ -211,7 +211,7 @@ class LoginActivity : AppCompatActivity() {
       if (currentUser != null){
           startActivity(
               Intent(
-                  this, CloudContactsActivity
+                  this, RoomContactsActivity
                   ::class.java
               )
           )

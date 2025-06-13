@@ -77,9 +77,6 @@ class CloudContactsActivity : AppCompatActivity() {
         }
 
         viewModel.fetchContacts(requestBody)
-
-        val intent = Intent(context, RoomContactsActivity::class.java)
-        startActivity(intent)
     }
 
     private fun onClick() {
@@ -87,33 +84,9 @@ class CloudContactsActivity : AppCompatActivity() {
             loadBottomSheetDialog()
         }
 
-        binding.bottomNav.setOnItemSelectedListener {
-            when(it.itemId) {
-                R.id.home_menu -> openHome()
-                R.id.profile_menu -> loadBottomSheetDialog()
-                R.id.setting_menu -> openSearch()
-            }
-            true
-        }
-
         binding.openDialPad.setOnClickListener {
           val intent = Intent(context, DialPadActivity::class.java)
             startActivity(intent)
-        }
-
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            val rect = Rect()
-            binding.root.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = binding.root.rootView.height
-            val keypadHeight = screenHeight - rect.bottom
-
-            if (keypadHeight > screenHeight * 0.15) {
-                // Keyboard is open
-                binding.bottomNav.visibility = View.GONE
-            } else {
-                // Keyboard is closed
-                binding.bottomNav.visibility = View.VISIBLE
-            }
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -131,29 +104,6 @@ class CloudContactsActivity : AppCompatActivity() {
         viewModel.filteredItems.observe(this) { contacts ->
             adapter.updateData(contacts)
         }
-    }
-
-    private fun openSearch(){
-        binding.searchView.visibility = View.VISIBLE
-        binding.searchView.isIconified = false
-
-        binding.searchView.requestFocus()
-        binding.searchView.requestFocusFromTouch()
-
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT)
-    }
-
-    private fun openHome() {
-        val options = ActivityOptionsCompat.makeCustomAnimation(
-            context,
-           0,
-            0
-        )
-
-        val intent = Intent(context, CloudContactsActivity::class.java)
-        startActivity(intent, options.toBundle())
-        finish()
     }
 
     private fun loadBottomSheetDialog() {
