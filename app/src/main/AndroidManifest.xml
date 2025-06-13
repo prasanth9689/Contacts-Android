@@ -44,9 +44,6 @@
             android:name=".CloudContactsActivity"
             android:exported="false" />
         <activity
-            android:name=".MobileContactsActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity

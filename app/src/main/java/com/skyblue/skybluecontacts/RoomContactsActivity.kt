@@ -55,8 +55,6 @@ class RoomContactsActivity : AppCompatActivity() {
         session = SessionHandler
         user = session.getUserDetails()!!
 
-
-
         val contactDao = AppDatabase.getDatabase(this).contactDao()
         val repository = ContactsRoomRepository(contactDao)
         viewModelRoom = ViewModelProvider(this, ContactsRoomViewModelFactory(repository))[ContactsRoomViewModel::class.java]
@@ -114,7 +112,7 @@ class RoomContactsActivity : AppCompatActivity() {
                 binding.noContactsLayout.visibility = View.GONE
 
                 val contactList = list.map {
-                    ContactsRoom(firstName = it.firstName, phoneNumber = it.phoneNumber)
+                    ContactsRoom(contactId = it.contactId, firstName = it.firstName, phoneNumber = it.phoneNumber)
                 }
                 viewModelRoom.insertContact(contactList)
                 viewModelRoom.getAllContacts()
@@ -193,7 +191,7 @@ class RoomContactsActivity : AppCompatActivity() {
             0
         )
 
-        val intent = Intent(context, CloudContactsActivity::class.java)
+        val intent = Intent(context, RoomContactsActivity::class.java)
         startActivity(intent, options.toBundle())
         finish()
     }

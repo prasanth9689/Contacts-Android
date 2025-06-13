@@ -114,6 +114,7 @@ class LoginActivity : AppCompatActivity() {
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
 
             // Sign in to Firebase with using the token
+            Log.e(TAG, "Google ID Token: ${googleIdTokenCredential.idToken}")
             firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
         } else {
             Log.w(TAG, "Credential is not of type Google ID!")
@@ -121,6 +122,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
+        Log.e(TAG, "Started Firebase Auth With Google: $idToken")
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -133,11 +135,14 @@ class LoginActivity : AppCompatActivity() {
                     showMessage("Google sign-in success")
                     binding.googleSignInLayout.visibility = View.GONE
                     binding.loginInitLayout.visibility = View.VISIBLE
-                    loginNow(user?.uid.toString(), user?.displayName.toString(), user?.email.toString())
+                    // Ensure these values are not null before passing to loginNow
+                    loginNow(user?.uid.orEmpty(), user?.displayName.orEmpty(), user?.email.orEmpty())
                 } else {
                     // If sign in fails, display a message to the user
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    // Log the actual exception for detailed error information
+                    Log.e(TAG, "signInWithCredential:failure", task.exception) // Use Log.e for errors
                     updateUI(null)
+                    showMessage("Google sign-in failed: ${task.exception?.localizedMessage}") // Show user-friendly error
                 }
             }
     }
@@ -216,6 +221,8 @@ class LoginActivity : AppCompatActivity() {
               )
           )
           finish()
+      } else{
+          Log.e("GoogleSignIn_", "User is null")
       }
     }
 }

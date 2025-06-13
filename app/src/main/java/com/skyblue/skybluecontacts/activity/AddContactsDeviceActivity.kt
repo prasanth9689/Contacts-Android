@@ -86,7 +86,7 @@ class AddContactsDeviceActivity : AppCompatActivity() {
             val selectedContacts = contactsList.filter { it.isSelected }
             val payload = ContactPayload(
                 contacts = selectedContacts.map {
-                    Contacts(it.firstName, it.phoneNumber)
+                    Contacts("", it.firstName, it.phoneNumber)
                 },
                 userId = user.userId.toString()
             )
