@@ -15,7 +15,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,6 +29,7 @@ import com.skyblue.skybluecontacts.model.Contacts
 import com.skyblue.skybluecontacts.model.ContactsSelection
 import com.skyblue.skybluecontacts.model.User
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
+import com.skyblue.skybluecontacts.showMessage
 import com.skyblue.skybluecontacts.viewmodel.ContactsSelViewModel
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -95,17 +95,18 @@ class AddContactsDeviceActivity : AppCompatActivity() {
                 .enqueue(object : Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         if (response.isSuccessful) {
-                            Toast.makeText(this@AddContactsDeviceActivity, "Contacts sent successfully", Toast.LENGTH_SHORT).show()
+                            showMessage(getString(R.string.contacts_saved_success))
                         } else {
-                            Log.e("SendContacts", "Error code: ${response.code()}")
+                            showMessage(getString(R.string.error_try_again))
+                            Log.e(TAG, "Error code: ${response.code()}")
                         }
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("SendContacts", "Failure: ${t.message}")
+                        showMessage(getString(R.string.error_try_again))
+                        Log.e(TAG, "Failure: ${t.message}")
                     }
                 })
-
 //            val selected = viewModel.getSelectedContacts()
 //            Toast.makeText(context, "Selected: ${selected.size}", Toast.LENGTH_SHORT).show()
         }
@@ -161,7 +162,7 @@ class AddContactsDeviceActivity : AppCompatActivity() {
             } while (cursor.moveToNext())
             cursor.close()
         } else{
-            Toast.makeText(this, "No contacts found", Toast.LENGTH_SHORT).show()
+            showMessage(getString(R.string.no_contacts_found))
             return
         }
 

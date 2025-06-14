@@ -9,4 +9,11 @@
     <color name="default_text_color">#08273E</color>
     <color name="selected_background_color">#dddddd</color>
     <color name="light_grey">#F9F9FA</color>
+    <color name="shadow_2">#dddddd</color>
+
+    <!--    For Normal/Light Mode-->
+    <color name="backgroundColor">#FFFFFF</color>
+    <color name="textColor">@color/primary</color>
+    <color name="textLightColor">#777777</color>
+    <color name="cardBackgroundColor">#FFFFFF</color>
 </resources>

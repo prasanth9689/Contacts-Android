@@ -5,4 +5,27 @@
     <string name="contacts_list">Contacts List</string>
     <string name="sign_in">Sign In</string>
     <string name="client_id">503820036345-ia677groolm9o1qrogbabcgb74jf56bc.apps.googleusercontent.com</string>
+    <string name="logout">Logout</string>
+    <string name="click_to_logout_now">Click to logout now</string>
+    <string name="app_language">App language</string>
+    <string name="english_device_default_language">English ( device default language )</string>
+    <string name="display">Display</string>
+    <string name="theme_font_size">Theme, font size</string>
+    <string name="manage_your_account">Manage your account, delete account</string>
+    <string name="my_account">My Account</string>
+    <string name="login_failed">Login Failed!</string>
+    <string name="google_sign_in_success">Google sign-in success</string>
+    <string name="google_sign_in_failed">Google sign-in failed: %1$s</string>
+    <string name="no_contacts_found">No contacts found!</string>
+    <string name="contacts_sync_please_wait">Contacts sync. please wait.</string>
+    <string name="contacts">Contacts</string>
+    <string name="search">Search</string>
+    <string name="no_contacts_found_n_please_add_contacts_to_cloud">No contacts found. \n Please add contacts to cloud.</string>
+    <string name="add_contacts">Add contacts</string>
+    <string name="save_contact">Save contact</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="call_permission_denied">Call permission denied</string>
+    <string name="phone_number_not_empty">Phone number not empty</string>
+    <string name="error_try_again">Error. try again!</string>
+    <string name="contacts_saved_success">Contacts saved success</string>
 </resources>

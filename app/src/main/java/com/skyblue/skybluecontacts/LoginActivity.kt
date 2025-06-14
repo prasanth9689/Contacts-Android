@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -16,15 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
 import com.skyblue.skybluecontacts.model.Login
@@ -103,14 +100,10 @@ class LoginActivity : AppCompatActivity() {
         Log.e("GoogleSignIn_", "Email: ${user?.email}")
         Log.e("GoogleSignIn_", "UID: ${user?.uid}")
         Log.e("GoogleSignIn_", "PhotoURL: ${user?.photoUrl}")
-
-        // Toast.makeText(context, user?.displayName , Toast.LENGTH_SHORT).show()
     }
 
     private fun handleSignIn(credential: Credential) {
-        // Check if credential is of type Google ID
         if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-            // Create Google ID Token
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
 
             // Sign in to Firebase with using the token
@@ -127,22 +120,22 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
                     updateUI(user)
 
-                    showMessage("Google sign-in success")
+                    showMessage(getString(R.string.google_sign_in_success))
                     binding.googleSignInLayout.visibility = View.GONE
                     binding.loginInitLayout.visibility = View.VISIBLE
-                    // Ensure these values are not null before passing to loginNow
                     loginNow(user?.uid.orEmpty(), user?.displayName.orEmpty(), user?.email.orEmpty())
                 } else {
-                    // If sign in fails, display a message to the user
-                    // Log the actual exception for detailed error information
-                    Log.e(TAG, "signInWithCredential:failure", task.exception) // Use Log.e for errors
+                    Log.e(TAG, "signInWithCredential:failure", task.exception)
                     updateUI(null)
-                    showMessage("Google sign-in failed: ${task.exception?.localizedMessage}") // Show user-friendly error
+                    showMessage(
+                        getString(
+                            R.string.google_sign_in_failed,
+                            task.exception?.localizedMessage
+                        ))
                 }
             }
     }
@@ -187,31 +180,29 @@ class LoginActivity : AppCompatActivity() {
                             showMessage(login.message)
                         }
                     }else {
-                        showMessage("Login Failed!")
+                        showMessage(getString(R.string.login_failed))
                     }
                 } else {
-                    showMessage("Login Failed!")
+                    showMessage(getString(R.string.login_failed))
                 }
             }
 
             override fun onFailure(call: Call<Login>, t: Throwable) {
-                showMessage("Login Failed!")
+                showMessage(getString(R.string.login_failed))
             }
         })
     }
 
-    fun showMessage(message: String) {
-        val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-        snackbar.setBackgroundTint(getColor(R.color.primary))
-        snackbar.setTextColor(Color.WHITE)
-        snackbar.show()
-    }
+//    fun showMessage(message: String) {
+//        val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+//        snackbar.setBackgroundTint(getColor(R.color.primary))
+//        snackbar.setTextColor(Color.WHITE)
+//        snackbar.show()
+//    }
 
     override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-       // updateUI(currentUser)
 
       if (currentUser != null){
           startActivity(

@@ -59,21 +59,19 @@ class RoomContactsActivity : AppCompatActivity() {
         val repository = ContactsRoomRepository(contactDao)
         viewModelRoom = ViewModelProvider(this, ContactsRoomViewModelFactory(repository))[ContactsRoomViewModel::class.java]
 
-
        // viewModelRoom.deleteAllContacts()
 
         viewModelRoom.isEmpty.observe(this) { isEmpty ->
             if (isEmpty) {
                 synchContacts()
-                Toast.makeText(this, "No contacts found", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "No contacts found! in local room database \n Fetching contacts from server")
+                showMessage(getString(R.string.contacts_sync_please_wait))
             } else {
-                Toast.makeText(this, "Contacts are available", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "Contacts are available. in local room database")
             }
         }
 
-        // trigger check (e.g. in `onCreate` or after insert/delete)
         viewModelRoom.checkIfContactsEmpty()
-
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -101,12 +99,11 @@ class RoomContactsActivity : AppCompatActivity() {
             Log.d(TAG, "Fetched items: $list")
 
             if (list.isNullOrEmpty()) {
-                showMessage("No contacts found!")
+                showMessage(getString(R.string.no_contacts_found))
                 binding.shimmerLayout.visibility = View.GONE
                 binding.noContactsLayout.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
             }else{
-             //   adapter.updateData(list)
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.shimmerLayout.visibility = View.GONE
                 binding.noContactsLayout.visibility = View.GONE
@@ -118,7 +115,6 @@ class RoomContactsActivity : AppCompatActivity() {
                 viewModelRoom.getAllContacts()
             }
         }
-
         viewModel.fetchContacts(requestBody)
     }
 
@@ -158,7 +154,6 @@ class RoomContactsActivity : AppCompatActivity() {
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 return true
             }
 
@@ -171,6 +166,9 @@ class RoomContactsActivity : AppCompatActivity() {
         viewModelRoom.filteredItems.observe(this) { contacts ->
             adapterRoom.updateData(contacts)
         }
+
+        val intent = Intent(context, SettingsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun openSearch(){

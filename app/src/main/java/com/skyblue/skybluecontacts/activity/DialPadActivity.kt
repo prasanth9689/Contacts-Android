@@ -1,32 +1,26 @@
 package com.skyblue.skybluecontacts.activity
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.databinding.ActivityDialPadBinding
+import com.skyblue.skybluecontacts.showMessage
 
 class DialPadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDialPadBinding
     val context = this
     private var currentNumber = ""
     private val REQUEST_CALL_PERMISSION = 1
-    private val REQUEST_WRITE_PERMISSION = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,18 +84,14 @@ class DialPadActivity : AppCompatActivity() {
             if (mNumber.isNotEmpty()){
 
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                    //  startActivity(callIntent)
-
                     nowCallStart()
                 } else {
                     ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.CALL_PHONE), REQUEST_CALL_PERMISSION)
                 }
 
             } else {
-                Toast.makeText(context, "Phone number not empty", Toast.LENGTH_SHORT).show()
+                showMessage(getString(R.string.phone_number_not_empty))
             }
-
-
         }
 
         binding.number.addTextChangedListener(object : TextWatcher {
@@ -147,12 +137,7 @@ class DialPadActivity : AppCompatActivity() {
 
         binding.saveContact.setOnClickListener {
             val mNumber = binding.number.text;
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT).show()
-            }else {
-                ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.WRITE_CONTACTS), REQUEST_WRITE_PERMISSION)
-                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
-            }
+
         }
     }
 
@@ -183,11 +168,11 @@ class DialPadActivity : AppCompatActivity() {
             grantResults.isNotEmpty() &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
+            showMessage(getString(R.string.permission_granted))
             nowCallStart()
             // Permission granted — retry the call or notify user
         } else {
-            Toast.makeText(this, "Call permission denied", Toast.LENGTH_SHORT).show()
+            showMessage(getString(R.string.call_permission_denied))
         }
     }
 }

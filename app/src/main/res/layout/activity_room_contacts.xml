@@ -17,7 +17,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Contacts"
+            android:text="@string/contacts"
             android:textColor="@color/primary"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Search"
+                    android:text="@string/search"
                     android:textSize="15sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"/>
@@ -168,7 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="No contacts found. \n Please add contacts to cloud."/>
+                android:text="@string/no_contacts_found_n_please_add_contacts_to_cloud"/>
 
             <Button
                 android:id="@+id/addContacts"
@@ -177,7 +177,7 @@
                 android:background="@drawable/btn_black"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Add contacts" />
+                android:text="@string/add_contacts" />
         </LinearLayout>
 
     </RelativeLayout>
