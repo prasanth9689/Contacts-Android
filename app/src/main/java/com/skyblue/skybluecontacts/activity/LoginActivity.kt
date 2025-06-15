@@ -1,12 +1,13 @@
-package com.skyblue.skybluecontacts
+package com.skyblue.skybluecontacts.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -16,16 +17,19 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
+import com.skyblue.skybluecontacts.R
+import com.skyblue.skybluecontacts.RoomContactsActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
 import com.skyblue.skybluecontacts.model.Login
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
+import com.skyblue.skybluecontacts.showMessage
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -41,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var context: Context = this@LoginActivity
     private val TAG = "GoogleSignIn_"
-    val requestCode = 123
     lateinit var session: SessionHandler
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
@@ -50,6 +53,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initTheme()
 
         auth = Firebase.auth
         credentialManager = CredentialManager.create(baseContext)
@@ -215,5 +220,26 @@ class LoginActivity : AppCompatActivity() {
       } else{
           Log.e("GoogleSignIn_", "User is null")
       }
+    }
+
+    private fun initTheme() {
+        val sharedPreferences = getSharedPreferences(
+            SHARED_PREF,
+            MODE_PRIVATE
+        )
+
+        val isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false)
+
+        Toast.makeText(context, isDarkModeOn.toString(), Toast.LENGTH_SHORT).show()
+
+        if (isDarkModeOn) {
+            AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_YES
+            )
+        } else {
+            AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
     }
 }

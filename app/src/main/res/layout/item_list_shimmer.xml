@@ -1,4 +1,5 @@
-<androidx.cardview.widget.CardView android:layout_width="match_parent"
+<androidx.cardview.widget.CardView xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="10dp"
     android:layout_height="wrap_content"
@@ -48,7 +49,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#8C8C8C"
                 android:textSize="10sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
         </LinearLayout>
 
     </RelativeLayout>

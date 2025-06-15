@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/ic_card_background_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_theme"
+            android:textColor="@color/textColor"
+            android:fontFamily="sans-serif"
+            android:textSize="22sp"/>
+
+        <RelativeLayout
+            android:id="@+id/system_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <RadioButton
+                android:id="@+id/system_def_radio_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/system_default"
+                android:paddingStart="10dp"
+                android:fontFamily="sans-serif"
+                android:textSize="17sp"
+                android:textColor="@color/textColor"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp">
+
+            <RadioButton
+                android:id="@+id/light_radio_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/light"
+                android:paddingStart="10dp"
+                android:fontFamily="sans-serif"
+                android:textSize="17sp"
+                android:textColor="@color/textColor"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp">
+
+            <RadioButton
+                android:id="@+id/dark_radio_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dark"
+                android:paddingStart="10dp"
+                android:fontFamily="sans-serif"
+                android:textSize="17sp"
+                android:textColor="@color/textColor"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="end">
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/textLightColor"/>
+
+            <TextView
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:textColor="@color/textLightColor"
+                android:text="@string/ok"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

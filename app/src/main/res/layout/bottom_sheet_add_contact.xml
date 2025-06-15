@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="Choose one"
+            android:text="@string/choose_one"
+            android:textColor="@color/textColor"
             android:textStyle="bold"
             android:textSize="15sp"
             android:layout_marginTop="10dp"/>
@@ -31,19 +34,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
+                    android:contentDescription="@string/select_from_contacts"
                     android:src="@drawable/ic_contacts_book_color"
                     android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Select from contacts"
+                    android:text="@string/select_from_contacts"
+                    android:textColor="@color/textColor"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
@@ -61,19 +67,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
+                    android:contentDescription="@string/add_manually"
                     android:src="@drawable/ic_keypad_color"
                     android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add manually"
+                    android:text="@string/add_manually"
+                    android:textColor="@color/textColor"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
@@ -91,19 +100,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
+                    android:contentDescription="@string/import_vcf_file"
                     android:src="@drawable/ic_vcf_file"
                     android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Import .VCF file"
+                    android:text="@string/import_vcf_file"
+                    android:textColor="@color/textColor"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
@@ -121,19 +133,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
+                    android:contentDescription="@string/import_csv_file"
                     android:src="@drawable/ic_con_csv_color"
                     android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Import .CSV file"
+                    android:text="@string/import_csv_file"
+                    android:textColor="@color/textColor"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>

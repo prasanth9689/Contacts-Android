@@ -9,7 +9,7 @@
     android:gravity="center_horizontal|bottom"
     android:layout_centerHorizontal="true"
     android:padding="20dp"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

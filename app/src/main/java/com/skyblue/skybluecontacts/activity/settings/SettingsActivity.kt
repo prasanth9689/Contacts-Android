@@ -1,10 +1,8 @@
-package com.skyblue.skybluecontacts
+package com.skyblue.skybluecontacts.activity.settings
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.skyblue.skybluecontacts.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -16,5 +14,12 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.back.setOnClickListener {
+            finish()
+        }
+
+        binding.display.setOnClickListener {
+            startActivity(Intent(context, DisplaySettingsActivity::class.java))
+        }
     }
 }

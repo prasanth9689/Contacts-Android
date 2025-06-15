@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/white"
-    tools:context=".CloudContactsActivity">
+    tools:context=".activity.CloudContactsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cloud contacts"
+            android:text="@string/cloud_contacts"
             android:textColor="@color/primary"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
@@ -111,11 +111,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:contentDescription="@string/no_contacts_image"
                 android:src="@drawable/no_contacts"
                 android:layout_gravity="center"/>
 
@@ -123,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="No contacts found. \n Please add contacts to cloud."/>
+                android:text="@string/no_contacts_found_n_please_add_contacts_to_cloud"/>
 
             <Button
                 android:id="@+id/addContacts"
@@ -132,7 +134,7 @@
                 android:background="@drawable/btn_black"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Add contacts" />
+                android:text="@string/add_contacts" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -145,10 +147,10 @@
         app:tint="@color/white"
         app:backgroundTint="@color/primary"
         android:src="@drawable/ic_dialpad"
-        android:contentDescription="Open dial pad"
+        android:contentDescription="@string/open_dial_pad"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp"/>
 
 </RelativeLayout>

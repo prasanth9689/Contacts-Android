@@ -1,6 +1,6 @@
 package com.skyblue.skybluecontacts.model
 
-import com.skyblue.skybluecontacts.LoginActivity
+import com.skyblue.skybluecontacts.activity.LoginActivity
 
 data class Login(
     val status: String,

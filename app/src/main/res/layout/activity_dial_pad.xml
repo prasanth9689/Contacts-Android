@@ -6,261 +6,285 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="@color/white"
+    android:background="@color/backgroundColor"
     tools:context=".activity.DialPadActivity">
 
     <RelativeLayout
-        android:id="@+id/saveContact"
+        android:id="@+id/dialPadLayout"
         android:layout_width="match_parent"
-        android:background="#F5F8FB"
-        android:layout_height="40dp"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/saveContact"
+            android:layout_width="match_parent"
+            android:background="#F5F8FB"
+            android:layout_height="40dp"
+            android:visibility="gone">
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_save_contact_custom"/>
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/save_contact"
-                android:textStyle="bold"
-                android:textColor="@color/primary"/>
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables,UselessParent">
 
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="@string/icon_save_contact"
+                    android:src="@drawable/ic_save_contact_custom"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/save_contact"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|bottom"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="40dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@null"
+                    android:autofillHints="phone"
+                    android:inputType="phone"
+                    app:tint="@color/buttonColor"
+                    android:textColor="@color/buttonColor"
+                    android:fontFamily="@font/ubuntu"
+                    android:textSize="25sp"
+                    tools:ignore="LabelFor" />
+
+                <ImageButton
+                    android:id="@+id/delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@null"
+                    android:contentDescription="@string/icon_delete"
+                    android:src="@drawable/delete"
+                    app:tint="@color/buttonColor"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/number_1"
+                    android:src="@drawable/ic_one"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/number_2"
+                    android:src="@drawable/ic_two"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/number_three"
+                    android:src="@drawable/ic_three"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/number_four"
+                    android:src="@drawable/ic_four"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/number_five"
+                    android:src="@drawable/ic_five"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/six"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/number_six"
+                    android:src="@drawable/ic_six"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/seven"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/number_seven"
+                    android:src="@drawable/ic_seven"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/eight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/number_eight"
+                    android:src="@drawable/ic_eight"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/nine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/number_nine"
+                    android:src="@drawable/ic_nine"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/star_key"
+                    android:src="@drawable/ic_seven"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/zero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/number_zero"
+                    android:src="@drawable/ic_seven"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    />
+
+                <ImageButton
+                    android:id="@+id/hash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/hash_key"
+                    android:src="@drawable/ic_hash"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+ />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/call"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="@string/call_button"
+                android:src="@drawable/ic_call"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@null"
+                android:foreground="?android:attr/selectableItemBackground"
+                />
         </LinearLayout>
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|bottom"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:padding="20dp"
-        android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="40dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:inputType="phone"
-            app:tint="@color/buttonColor"
-            android:textColor="@color/buttonColor"
-            android:fontFamily="@font/ubuntu"
-            android:textSize="25sp" />
-
-        <ImageButton
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:src="@drawable/delete"
-            app:tint="@color/buttonColor"
-            android:visibility="gone"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/one"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_one"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/two"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_two"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/three"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_three"
-            android:layout_weight="1"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/four"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:src="@drawable/ic_four"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/five"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:src="@drawable/ic_five"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/six"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_six"
-            android:layout_weight="1"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/seven"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:src="@drawable/ic_seven"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/eight"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:src="@drawable/ic_eight"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/nine"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_nine"
-            android:layout_weight="1"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/star"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:src="@drawable/ic_star"
-            android:background="@color/white"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/zero"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:src="@drawable/ic_zero"
-            android:background="@color/white"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-        <ImageButton
-            android:id="@+id/hash"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_hash"
-            android:layout_weight="1"
-            android:background="@null"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
-
-
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/call"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_call"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
-        android:background="@null"
-        android:foreground="?android:attr/selectableItemBackground"
-        />
-    </LinearLayout>
 </RelativeLayout>
 

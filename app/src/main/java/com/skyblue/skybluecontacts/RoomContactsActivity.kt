@@ -9,6 +9,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import android.graphics.Color
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
@@ -20,6 +22,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
+import com.skyblue.skybluecontacts.activity.settings.DisplaySettingsActivity
+import com.skyblue.skybluecontacts.activity.settings.SettingsActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.adapter.ContactsRoomAdapter
 import okhttp3.MediaType.Companion.toMediaType
@@ -84,6 +88,10 @@ class RoomContactsActivity : AppCompatActivity() {
         viewModelRoom.getAllContacts()
 
         onClick()
+
+        val searchView = findViewById<SearchView>(R.id.searchView)
+        val searchEditText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        searchEditText.setTextColor(getColor(R.color.primary))
     }
 
     private fun synchContacts() {
@@ -119,6 +127,12 @@ class RoomContactsActivity : AppCompatActivity() {
     }
 
     private fun onClick() {
+
+        binding.settings.setOnClickListener {
+            val intent = Intent(context, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.addContacts.setOnClickListener {
             loadBottomSheetDialog()
         }
@@ -166,9 +180,6 @@ class RoomContactsActivity : AppCompatActivity() {
         viewModelRoom.filteredItems.observe(this) { contacts ->
             adapterRoom.updateData(contacts)
         }
-
-        val intent = Intent(context, SettingsActivity::class.java)
-        startActivity(intent)
     }
 
     private fun openSearch(){
