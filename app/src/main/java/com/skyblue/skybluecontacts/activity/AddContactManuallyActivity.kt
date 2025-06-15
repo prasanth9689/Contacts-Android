@@ -2,9 +2,10 @@ package com.skyblue.skybluecontacts.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.databinding.ActivityAddContactManuallyBinding
 
-class AddContactManuallyActivity : AppCompatActivity() {
+class AddContactManuallyActivity : BaseActivity() {
     private lateinit var binding: ActivityAddContactManuallyBinding
     private val context = this
     val TAG = "AddContactManually_"

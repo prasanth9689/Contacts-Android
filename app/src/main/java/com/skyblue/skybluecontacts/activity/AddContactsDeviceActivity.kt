@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.adapter.ContactsSelectionAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityAddContactsDeviceBinding
@@ -36,7 +37,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AddContactsDeviceActivity : AppCompatActivity() {
+class AddContactsDeviceActivity : BaseActivity() {
     private lateinit var binding: ActivityAddContactsDeviceBinding
     private val viewModel: ContactsSelViewModel by viewModels()
     private lateinit var adapter: ContactsSelectionAdapter

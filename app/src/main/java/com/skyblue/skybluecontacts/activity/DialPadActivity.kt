@@ -12,11 +12,12 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.databinding.ActivityDialPadBinding
 import com.skyblue.skybluecontacts.showMessage
 
-class DialPadActivity : AppCompatActivity() {
+class DialPadActivity : BaseActivity() {
     private lateinit var binding: ActivityDialPadBinding
     val context = this
     private var currentNumber = ""

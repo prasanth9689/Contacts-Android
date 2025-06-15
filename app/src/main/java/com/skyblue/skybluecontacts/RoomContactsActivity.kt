@@ -40,7 +40,7 @@ import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class RoomContactsActivity : AppCompatActivity() {
+class RoomContactsActivity : BaseActivity() {
     private lateinit var binding: ActivityRoomContactsBinding
     private val context = this
     val TAG = "RoomContacts_"

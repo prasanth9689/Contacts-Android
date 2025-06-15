@@ -2,10 +2,10 @@ package com.skyblue.skybluecontacts.activity.settings
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.databinding.ActivitySettingsBinding
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private val context = this
 

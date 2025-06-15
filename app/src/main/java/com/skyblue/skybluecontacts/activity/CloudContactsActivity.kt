@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityCloudContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
@@ -21,7 +22,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
-class CloudContactsActivity : AppCompatActivity() {
+class CloudContactsActivity : BaseActivity() {
     private lateinit var binding: ActivityCloudContactsBinding
     private val context = this
     val TAG = "CloudContacts_"

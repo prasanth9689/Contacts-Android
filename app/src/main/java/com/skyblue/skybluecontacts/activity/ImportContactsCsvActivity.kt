@@ -2,9 +2,10 @@ package com.skyblue.skybluecontacts.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.databinding.ActivityImportContactsCsvBinding
 
-class ImportContactsCsvActivity : AppCompatActivity() {
+class ImportContactsCsvActivity : BaseActivity() {
     private lateinit var binding: ActivityImportContactsCsvBinding
     private val context = this
     val TAG = "ImportContactsCsv_"
