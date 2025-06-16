@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.skyblue.skybluecontacts.model.User
 import java.util.Date
+import androidx.core.content.edit
 
 object SessionHandler {
     private var PREFS_KEY = "prefs"
@@ -56,9 +57,9 @@ object SessionHandler {
      * Logs out user by clearing the session
      */
     fun logoutUser() {
-        val editer : SharedPreferences.Editor = sharedPreferences.edit()
-        editer.clear()
-        editer.commit()
+        sharedPreferences.edit(commit = true) {
+            clear()
+        }
     }
 
     /**

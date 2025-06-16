@@ -7,11 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
-import android.graphics.Color
-import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.ViewModel
@@ -22,13 +20,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
-import com.skyblue.skybluecontacts.activity.settings.DisplaySettingsActivity
 import com.skyblue.skybluecontacts.activity.settings.SettingsActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.adapter.ContactsRoomAdapter
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import com.skyblue.skybluecontacts.databinding.ActivityRoomContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
@@ -39,6 +33,9 @@ import com.skyblue.skybluecontacts.viewmodel.ContactsRoomViewModel
 import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class RoomContactsActivity : BaseActivity() {
     private lateinit var binding: ActivityRoomContactsBinding

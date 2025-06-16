@@ -11,7 +11,6 @@ import android.view.Window
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.drawable.toDrawable
 import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
@@ -65,7 +64,6 @@ class DisplaySettingsActivity : BaseActivity() {
 
         fontSizeDialog!!.show()
 
-        //   themeDialog.show();
         val small = fontSizeDialog!!.findViewById<RelativeLayout>(R.id.small)
         val medium = fontSizeDialog!!.findViewById<RelativeLayout>(R.id.medium)
         val large = fontSizeDialog!!.findViewById<RelativeLayout>(R.id.large)
@@ -107,7 +105,6 @@ class DisplaySettingsActivity : BaseActivity() {
             mediumRadioBtn.isChecked = false
         }
 
-        // For radio button click
         smallRadioBtn.setOnClickListener {
             selectedFontSize = 1
             smallRadioBtn.isChecked = true
@@ -142,24 +139,24 @@ class DisplaySettingsActivity : BaseActivity() {
         okButton.setOnClickListener {
             when (selectedFontSize) {
                 1 -> {
-                    PreferenceHelper.saveFontScale(context, 0.8f) // Default
+                    PreferenceHelper.saveFontScale(context, 0.8f)
                     recreate()
-                    showToast("Selected small")
+                    Log.d(TAG, "Selected font size small")
                 }
 
                 2 -> {
                     PreferenceHelper.saveFontScale(context, 1.0f) // Default
                     recreate()
-                    showToast("Selected medium")
+                    Log.d(TAG, "Selected font size medium")
                 }
 
                 3 -> {
                     PreferenceHelper.saveFontScale(context, 1.3f) // 30% larger
-                    recreate() // Restart activity to apply change
-                    showToast("Selected large")
+                    recreate()
+                    Log.d(TAG, "Selected font size large")
                 }
 
-                else -> showToast("Font size not selected!")
+                else -> Log.d(TAG, "Font size not selected!")
             }
         }
 
@@ -208,7 +205,6 @@ class DisplaySettingsActivity : BaseActivity() {
 
         themeDialog!!.show()
 
-        //   themeDialog.show();
         val systemDefault = themeDialog!!.findViewById<RelativeLayout>(R.id.system_default)
         val light = themeDialog!!.findViewById<RelativeLayout>(R.id.light)
         val dark = themeDialog!!.findViewById<RelativeLayout>(R.id.dark)
@@ -221,7 +217,6 @@ class DisplaySettingsActivity : BaseActivity() {
         val lightRadioBtn = themeDialog!!.findViewById<RadioButton>(R.id.light_radio_btn)
         val darkRadioBn = themeDialog!!.findViewById<RadioButton>(R.id.dark_radio_btn)
 
-        //    systemDefault.setEnabled(true);
         darkRadioBn.isEnabled = true
         lightRadioBtn.isEnabled = true
         systemDefaultRadioBtn.isEnabled = true
@@ -295,20 +290,20 @@ class DisplaySettingsActivity : BaseActivity() {
             when (selectedTheme) {
                 1 -> {
                     enableSystemDefaultMode()
-                    showToast("Selected system default theme")
+                    Log.d(TAG, "Selected system default theme")
                 }
 
                 2 -> {
                     enableLightMode()
-                    showToast("Selected light theme")
+                    Log.d(TAG, "Selected light theme")
                 }
 
                 3 -> {
                     enableDarkMode()
-                    showToast("Selected dark theme")
+                    Log.d(TAG, "Selected dark theme")
                 }
 
-                else -> showToast("Theme not selected!")
+                else -> Log.d(TAG, "Theme not selected!")
             }
         }
 
@@ -360,9 +355,5 @@ class DisplaySettingsActivity : BaseActivity() {
         editor!!.apply()
 
         themeDialog!!.dismiss()
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

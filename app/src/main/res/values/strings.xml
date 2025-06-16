@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Skyblue Contacts</string>
+    <string name="app_name" translatable="false">Skyblue Contacts</string>
     <string name="contact_permission_denied_open_app_settings">Contact permission denied. Open app settings. to enable read contacts permission manually!</string>
     <string name="call_permission_denied_open_app_settings">Call permission denied. Open app settings. to enable call permission manually!</string>
     <string name="contacts_list">Contacts List</string>
     <string name="sign_in">Sign In</string>
-    <string name="client_id">503820036345-ia677groolm9o1qrogbabcgb74jf56bc.apps.googleusercontent.com</string>
+    <string name="client_id" translatable="false">503820036345-ia677groolm9o1qrogbabcgb74jf56bc.apps.googleusercontent.com</string>
     <string name="logout">Logout</string>
     <string name="click_to_logout_now">Click to logout now</string>
     <string name="app_language">App language</string>
@@ -30,8 +30,8 @@
     <string name="contacts_saved_success">Contacts saved success</string>
     <string name="icon_save_contact">Icon save contact</string>
     <string name="icon_delete">Icon delete</string>
-    <string name="number_1">Number 1</string>
-    <string name="number_2">Number 2</string>
+    <string name="number_1">Number one</string>
+    <string name="number_2">Number two</string>
     <string name="number_three">Number three</string>
     <string name="number_four">Number four</string>
     <string name="number_five">Number five</string>
@@ -45,30 +45,30 @@
     <string name="number_zero">Number zero</string>
     <string name="back_button">Back button</string>
     <string name="check_all_button">Check all button</string>
-    <string name="_0">0</string>
+    <string name="_0" translatable="false">0</string>
     <string name="selected">selected</string>
     <string name="save_cloud_now">Save cloud now</string>
     <string name="cloud_contacts">Cloud contacts</string>
-    <string name="no_contacts_image">No contacts image</string>
+    <string name="no_contacts_image">No contacts</string>
     <string name="open_dial_pad">Open dial pad</string>
     <string name="display_settings">Display settings</string>
     <string name="icon_theme">Icon theme</string>
     <string name="theme">Theme</string>
     <string name="system_default_theme">System default</string>
-    <string name="icon_font">Icon font</string>
+    <string name="icon_font">font</string>
     <string name="font_size">Font size</string>
     <string name="medium">Medium</string>
     <string name="welcome_user">Welcome User!</string>
     <string name="initializing">initializing</string>
-    <string name="icon_login_vector">Icon login vector</string>
+    <string name="icon_login_vector">login</string>
     <string name="continue_with_google">Continue with google</string>
     <string name="settings">Settings</string>
-    <string name="icon_settings">Icon settings</string>
-    <string name="icon_no_contacts">Icon no contacts</string>
-    <string name="icon_user">Icon user</string>
-    <string name="icon_display_settings">Icon display settings</string>
-    <string name="icon_language_settings">Icon language settings</string>
-    <string name="icon_logout">Icon logout</string>
+    <string name="icon_settings">Isettings</string>
+    <string name="icon_no_contacts">no contacts</string>
+    <string name="icon_user">user</string>
+    <string name="icon_display_settings">display settings</string>
+    <string name="icon_language_settings">language settings</string>
+    <string name="icon_logout">logout</string>
     <string name="choose_one">Choose one</string>
     <string name="select_from_contacts">Select from contacts</string>
     <string name="add_manually">Add manually</string>
@@ -84,4 +84,7 @@
     <string name="choose_font_size">Choose font size</string>
     <string name="small">Small</string>
     <string name="large">Large</string>
+    <string name="select_language">Select language</string>
+    <string name="english">English</string>
+    <string name="tamil">Tamil</string>
 </resources>

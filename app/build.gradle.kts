@@ -74,4 +74,14 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.56.2")
     kapt("com.google.dagger:hilt-android-compiler:2.56.2")
 
+
+     /* Deprecated recent versions (2024+) of Google Play Services
+        need only for signout. Google-SignIn. Future no longer need
+
+        Sign-In = Credential Manager (SignInClient)
+        Sign-Out =  GoogleSignInClient (uses GoogleSignInOptions, still required)
+      */
+
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+
 }

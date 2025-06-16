@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
@@ -25,6 +23,8 @@ import com.google.firebase.auth.auth
 import com.skyblue.mya.SessionHandler
 import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.BaseActivity
+import com.skyblue.skybluecontacts.LocaleHelper
+import com.skyblue.skybluecontacts.PreferenceHelper
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.RoomContactsActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
@@ -199,13 +199,6 @@ class LoginActivity : BaseActivity() {
         })
     }
 
-//    fun showMessage(message: String) {
-//        val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
-//        snackbar.setBackgroundTint(getColor(R.color.primary))
-//        snackbar.setTextColor(Color.WHITE)
-//        snackbar.show()
-//    }
-
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
@@ -231,8 +224,6 @@ class LoginActivity : BaseActivity() {
 
         val isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false)
 
-        Toast.makeText(context, isDarkModeOn.toString(), Toast.LENGTH_SHORT).show()
-
         if (isDarkModeOn) {
             AppCompatDelegate.setDefaultNightMode(
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -243,4 +234,11 @@ class LoginActivity : BaseActivity() {
             )
         }
     }
+
+//    override fun attachBaseContext(newBase: Context) {
+//        val lang = PreferenceHelper.getLanguage(newBase)
+//        val context = LocaleHelper.setLocale(newBase, lang)
+//        super.attachBaseContext(context)
+//    }
+
 }
