@@ -6,74 +6,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/white"
+    android:background="@color/backgroundColor"
     tools:context=".activity.CloudContactsActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cloud_contacts"
-            android:textColor="@color/primary"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
-
-    </RelativeLayout>
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-            <include layout="@layout/item_list_shimmer" />
-        </LinearLayout>
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
         android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cloud_contacts"
+                android:textColor="@color/textColor"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+        </RelativeLayout>
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -88,9 +47,53 @@
             android:focusableInTouchMode="true"
             android:background="@drawable/btn_search"
             app:queryBackground="@android:color/transparent"
-            app:queryHint="Search contacts"
+            app:queryHint="@string/search_contacts"
             android:visibility="visible"
            />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+                <include layout="@layout/item_list_shimmer" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

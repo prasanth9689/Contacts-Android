@@ -240,7 +240,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:contentDescription="@string/star_key"
-                    android:src="@drawable/ic_seven"
+                    android:src="@drawable/ic_star"
                     android:background="@null"
                     android:foreground="?android:attr/selectableItemBackground"
                     />
@@ -252,7 +252,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:contentDescription="@string/number_zero"
-                    android:src="@drawable/ic_seven"
+                    android:src="@drawable/ic_zero"
                     android:background="@null"
                     android:foreground="?android:attr/selectableItemBackground"
                     />

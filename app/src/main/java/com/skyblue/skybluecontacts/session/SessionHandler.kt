@@ -1,4 +1,4 @@
-package com.skyblue.mya
+package com.skyblue.skybluecontacts.session
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -23,15 +23,15 @@ object SessionHandler {
     // TODO step 1: call `AppPreferences.setup(applicationContext)` in your MainActivity's `onCreate` method
     // TODO step 2: set your app name here
     fun loginUser(userId: String, userName: String){
-        val editer : SharedPreferences.Editor = sharedPreferences.edit()
-        editer.putString(USER_ID_KEY, userId)
-        editer.putString(USER_NAME_KEY, userName)
-        val date = Date()
+        sharedPreferences.edit {
+            putString(USER_ID_KEY, userId)
+            putString(USER_NAME_KEY, userName)
+            val date = Date()
 
-        //Set user session for next 7 days
-        val millis = date.time + 7 * 24 * 60 * 60 * 1000
-        editer.putLong(KEY_EXPIRES, millis)
-        editer.apply()
+            //Set user session for next 7 days
+            val millis = date.time + 7 * 24 * 60 * 60 * 1000
+            putLong(KEY_EXPIRES, millis)
+        }
     }
 
     /**

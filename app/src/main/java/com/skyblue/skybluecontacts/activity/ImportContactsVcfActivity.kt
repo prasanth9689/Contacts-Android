@@ -1,7 +1,6 @@
 package com.skyblue.skybluecontacts.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.databinding.ActivityImportContactsVcfBinding
 
@@ -12,6 +11,7 @@ class ImportContactsVcfActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityImportContactsVcfBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
     }

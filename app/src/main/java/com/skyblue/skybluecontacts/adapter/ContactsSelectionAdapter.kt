@@ -1,5 +1,6 @@
 package com.skyblue.skybluecontacts.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -51,6 +52,7 @@ class ContactsSelectionAdapter(
 
     override fun getItemCount(): Int = contacts.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newList: List<ContactsSelection>) {
         contacts = newList
         notifyDataSetChanged()

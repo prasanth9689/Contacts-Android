@@ -93,10 +93,65 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text="@string/manage_your_account"
-                    android:textColor="@color/textLightColor"
+                    android:textColor="#757575"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cloudContacts"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                tools:ignore="RtlSymmetry">
+
+                <ImageView
+                    android:contentDescription="@string/cloud_contacts"
+                    android:src="@drawable/ic_cloud"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:tint="@color/textColor" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:text="@string/cloud_contacts"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:text="@string/view_contacts_from_cloud"
+                    android:textColor="#757575"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -148,16 +203,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text="@string/theme_font_size"
-                    android:textColor="@color/textLightColor"
-                    android:fontFamily="sans-serif"
+                    android:textColor="#757575"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/language"
@@ -204,10 +258,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text="@string/english_device_default_language"
-                    android:textColor="@color/textLightColor"
-                    android:fontFamily="sans-serif"
+                    android:textColor="#757575"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -260,10 +314,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text="@string/click_to_logout_now"
-                    android:textColor="@color/textLightColor"
-                    android:fontFamily="sans-serif"
+                    android:textColor="#757575"
                     android:textSize="14sp" />
 
             </LinearLayout>

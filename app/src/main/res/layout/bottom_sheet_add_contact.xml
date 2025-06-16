@@ -40,10 +40,11 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
                     android:contentDescription="@string/select_from_contacts"
                     android:src="@drawable/ic_contacts_book_color"
-                    android:layout_gravity="center_vertical"/>
+                    tools:ignore="ImageContrastCheck" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,10 +74,11 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
                     android:contentDescription="@string/add_manually"
                     android:src="@drawable/ic_keypad_color"
-                    android:layout_gravity="center_vertical"/>
+                    tools:ignore="ImageContrastCheck" />
 
                 <TextView
                     android:layout_width="wrap_content"

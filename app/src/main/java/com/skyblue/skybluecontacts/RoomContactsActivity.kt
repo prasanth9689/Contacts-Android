@@ -8,18 +8,21 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.session.SessionHandler
+import com.skyblue.skybluecontacts.activity.AddContactManuallyActivity
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
+import com.skyblue.skybluecontacts.activity.ImportContactsCsvActivity
+import com.skyblue.skybluecontacts.activity.ImportContactsVcfActivity
 import com.skyblue.skybluecontacts.activity.settings.SettingsActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.adapter.ContactsRoomAdapter
@@ -89,6 +92,8 @@ class RoomContactsActivity : BaseActivity() {
         val searchView = findViewById<SearchView>(R.id.searchView)
         val searchEditText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
         searchEditText.setTextColor(getColor(R.color.primary))
+
+        searchEditText.setHintTextColor(ContextCompat.getColor(context, R.color.textHintColor))
     }
 
     private fun synchContacts() {
@@ -213,16 +218,18 @@ class RoomContactsActivity : BaseActivity() {
         }
 
         binding.addManually.setOnClickListener {
-            val intent = Intent(context, DialPadActivity::class.java)
+            val intent = Intent(context, AddContactManuallyActivity::class.java)
             startActivity(intent)
         }
 
         binding.importVcf.setOnClickListener {
-            Toast.makeText(context, "Import .VCF file", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, ImportContactsVcfActivity::class.java)
+            startActivity(intent)
         }
 
         binding.importCsv.setOnClickListener {
-            Toast.makeText(context, "Import .CSV file", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, ImportContactsCsvActivity::class.java)
+            startActivity(intent)
         }
 
         dialog.setContentView(view)

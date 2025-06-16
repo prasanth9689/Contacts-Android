@@ -15,10 +15,11 @@ import androidx.credentials.CredentialManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.PreferenceHelper
 import com.skyblue.skybluecontacts.R
+import com.skyblue.skybluecontacts.activity.CloudContactsActivity
 import com.skyblue.skybluecontacts.activity.LoginActivity
 import com.skyblue.skybluecontacts.databinding.ActivitySettingsBinding
 import com.skyblue.skybluecontacts.model.User
@@ -55,6 +56,10 @@ class SettingsActivity : BaseActivity() {
 
         binding.language.setOnClickListener {
             initLanguage()
+        }
+
+        binding.cloudContacts.setOnClickListener {
+            startActivity(Intent(context, CloudContactsActivity::class.java))
         }
 
         binding.logout.setOnClickListener {

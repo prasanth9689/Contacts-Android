@@ -4,14 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.BaseActivity
+import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityCloudContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
@@ -100,6 +102,13 @@ class CloudContactsActivity : BaseActivity() {
         viewModel.filteredItems.observe(this) { contacts ->
             adapter.updateData(contacts)
         }
+
+        val searchView = findViewById<SearchView>(R.id.searchView)
+        val searchEditText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        searchEditText.setTextColor(getColor(R.color.primary))
+
+        searchEditText.setHintTextColor(ContextCompat.getColor(context, R.color.textHintColor))
+
     }
 
     private fun loadBottomSheetDialog() {

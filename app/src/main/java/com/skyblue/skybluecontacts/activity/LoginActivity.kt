@@ -20,11 +20,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.BaseActivity
-import com.skyblue.skybluecontacts.LocaleHelper
-import com.skyblue.skybluecontacts.PreferenceHelper
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.RoomContactsActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding

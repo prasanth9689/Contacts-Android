@@ -1,11 +1,11 @@
 package com.skyblue.skybluecontacts.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import com.skyblue.skybluecontacts.R
 import androidx.recyclerview.widget.RecyclerView
-import com.skyblue.skybluecontacts.model.Contacts
+import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.model.ContactsRoom
 
 class ContactsRoomAdapter(private var contacts: List<ContactsRoom>) : RecyclerView.Adapter<ContactViewHolder>() {
@@ -20,6 +20,7 @@ class ContactsRoomAdapter(private var contacts: List<ContactsRoom>) : RecyclerVi
 
     override fun getItemCount() = contacts.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newContacts: List<ContactsRoom>) {
         contacts = newContacts
         notifyDataSetChanged()

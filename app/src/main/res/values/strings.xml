@@ -4,7 +4,7 @@
     <string name="call_permission_denied_open_app_settings">Call permission denied. Open app settings. to enable call permission manually!</string>
     <string name="contacts_list">Contacts List</string>
     <string name="sign_in">Sign In</string>
-    <string name="client_id" translatable="false">503820036345-ia677groolm9o1qrogbabcgb74jf56bc.apps.googleusercontent.com</string>
+    <string name="client_id">503820036345-ia677groolm9o1qrogbabcgb74jf56bc.apps.googleusercontent.com</string>
     <string name="logout">Logout</string>
     <string name="click_to_logout_now">Click to logout now</string>
     <string name="app_language">App language</string>
@@ -43,8 +43,8 @@
     <string name="hash_key">Hash key</string>
     <string name="call_button">Call button</string>
     <string name="number_zero">Number zero</string>
-    <string name="back_button">Back button</string>
-    <string name="check_all_button">Check all button</string>
+    <string name="back_button">Back to previous screen</string>
+    <string name="check_all_button">Mark all contact</string>
     <string name="_0" translatable="false">0</string>
     <string name="selected">selected</string>
     <string name="save_cloud_now">Save cloud now</string>
@@ -85,6 +85,10 @@
     <string name="small">Small</string>
     <string name="large">Large</string>
     <string name="select_language">Select language</string>
-    <string name="english">English</string>
-    <string name="tamil">Tamil</string>
+    <string name="english" translatable="false">English</string>
+    <string name="tamil" translatable="false">Tamil</string>
+    <string name="phone">Phone</string>
+    <string name="name">Name</string>
+    <string name="view_contacts_from_cloud">View contacts from cloud</string>
+    <string name="search_contacts">Search contacts</string>
 </resources>

@@ -3,15 +3,14 @@ package com.skyblue.skybluecontacts.activity
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.databinding.ActivityDialPadBinding
@@ -144,10 +143,10 @@ class DialPadActivity : BaseActivity() {
 
     private fun nowCallStart() {
         val mNumber = binding.number.text;
-        val phoneNumber = "tel:" + mNumber
+        val phoneNumber = "tel:$mNumber"
 
         val callIntent = Intent(Intent.ACTION_CALL).apply {
-            data = Uri.parse(phoneNumber)
+            data = phoneNumber.toUri()
         }
 
         startActivity(callIntent)

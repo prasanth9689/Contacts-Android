@@ -16,11 +16,10 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.skyblue.mya.SessionHandler
+import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.adapter.ContactsSelectionAdapter
@@ -83,7 +82,7 @@ class AddContactsDeviceActivity : BaseActivity() {
             adapter.updateData(it)
         }
 
-        binding.btnShowSelected.setOnClickListener {
+        binding.save.setOnClickListener {
             val selectedContacts = contactsList.filter { it.isSelected }
             val payload = ContactPayload(
                 contacts = selectedContacts.map {

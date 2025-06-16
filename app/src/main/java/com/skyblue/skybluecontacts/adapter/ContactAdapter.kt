@@ -1,5 +1,6 @@
 package com.skyblue.skybluecontacts.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ class ContactAdapter(private var contacts: List<Contacts>) :
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newContacts: List<Contacts>) {
         contacts = newContacts
         notifyDataSetChanged()
