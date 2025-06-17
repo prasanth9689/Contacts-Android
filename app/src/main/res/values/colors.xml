@@ -16,8 +16,12 @@
     <color name="textColor">#08273E</color>
     <color name="textLightColor">#777777</color>
     <color name="cardBackgroundColor">#FFFFFF</color>
-    <color name="textButtonColor">#08273E</color>
     <color name="vectorColor">#B3B8BC</color>
     <color name="textCardColor">#FFFFFF</color>
     <color name="textHintColor">#777777</color>
+    <color name="errorBackgroundColor">#08273E</color>
+    <color name="textColorError">#FFFFFF</color>
+    <color name="textColorCustomButton">#FFFFFF</color>
+    <color name="backgroundCustomButton">#08273E</color>
+    <color name="bottomNavigationIconColor">#08273E</color>
 </resources>
