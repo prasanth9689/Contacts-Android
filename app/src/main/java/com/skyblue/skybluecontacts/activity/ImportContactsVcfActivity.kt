@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,7 +60,9 @@ class ImportContactsVcfActivity : BaseActivity() {
             }
         )[ContactVcfViewModel::class.java]
 
-        contactAdapter = ContactVcfAdapter(emptyList())
+        contactAdapter = ContactVcfAdapter(emptyList()) { position ->
+            contactViewModel.toggleContactSelection(position)
+        }
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = contactAdapter
 
@@ -69,13 +72,33 @@ class ImportContactsVcfActivity : BaseActivity() {
 
             binding.markAll.visibility = View.VISIBLE
             binding.selectedLayout.visibility = View.VISIBLE
-            binding.save.visibility = View.VISIBLE
+           // binding.save.visibility = View.VISIBLE
+
+            val count = list.count { it.isSelected }
+            binding.selectedText.text = count.toString()
+
+            val selectedCount = contactViewModel.getSelectedCount()
+
+            binding.save.isVisible = selectedCount > 0
 
             Log.d(TAG, "Contacts observer: $list")
         }
 
         binding.back.setOnClickListener {
             finish()
+        }
+
+        binding.markAll.setOnClickListener {
+            val nowAllSelected = contactViewModel.toggleSelectAll()
+//            .text = if (nowAllSelected) "Deselect All" else "Select All"
+        }
+
+        binding.save.setOnClickListener {
+            val selectedContacts = contactViewModel.getSelectedContacts()
+
+            for (contact in selectedContacts) {
+                Log.d(TAG, "SelectedContact ${contact.name} - ${contact.phone}")
+            }
         }
     }
 

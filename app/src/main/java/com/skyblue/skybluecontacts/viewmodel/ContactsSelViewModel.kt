@@ -20,6 +20,17 @@ class ContactsSelViewModel : ViewModel(){
         }
     }
 
+    fun toggleSelectAll(): Boolean {
+        val current = _contacts.value ?: return false
+        val allSelected = current.all { it.isSelected }
+        _contacts.value = current.map { it.copy(isSelected = !allSelected) }
+        return !allSelected // Returns true if now selected, false if deselected
+    }
+
+    fun getSelectedCount(): Int {
+        return _contacts.value?.count { it.isSelected } ?: 0
+    }
+
     fun getSelectedContacts(): List<ContactsSelection>{
         return _contacts.value?.filter { it.isSelected } ?: emptyList()
     }

@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.BaseActivity
@@ -62,24 +63,22 @@ class AddContactsDeviceActivity : BaseActivity() {
             listContacts()
         }
 
-
         adapter = ContactsSelectionAdapter(emptyList()) { position ->
             viewModel.toggleSelection(position)
-
             contactsList[position].isSelected = !contactsList[position].isSelected
             adapter.notifyItemChanged(position)
-            val selectedCount = contactsList.count { it.isSelected }
-            binding.checkedContacts.text = selectedCount.toString()
-            //Toast.makeText(this, "Selected: $selectedCount", Toast.LENGTH_SHORT).show()
         }
-
-
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
         viewModel.contacts.observe(this) {
             adapter.updateData(it)
+
+            val selectedCount = viewModel.getSelectedCount()
+            binding.save.isVisible = selectedCount > 0
+
+            binding.checkedContacts.text = selectedCount.toString()
         }
 
         binding.save.setOnClickListener {
@@ -107,8 +106,6 @@ class AddContactsDeviceActivity : BaseActivity() {
                         Log.e(TAG, "Failure: ${t.message}")
                     }
                 })
-//            val selected = viewModel.getSelectedContacts()
-//            Toast.makeText(context, "Selected: ${selected.size}", Toast.LENGTH_SHORT).show()
         }
 
         binding.back.setOnClickListener{
@@ -116,10 +113,7 @@ class AddContactsDeviceActivity : BaseActivity() {
         }
 
         binding.checkAll.setOnClickListener {
-            allSelected = !allSelected
-            contactsList.forEach { it.isSelected = allSelected }
-            adapter.updateData(contactsList)
-
+            viewModel.toggleSelectAll()
         }
     }
 
