@@ -1,7 +1,7 @@
-package com.skyblue.skybluecontacts
+package com.skyblue.skybluecontacts.util
 
 import android.content.Context
-import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
+import com.skyblue.skybluecontacts.util.AppConstants.SHARED_PREF
 
 object PreferenceHelper {
     private const val PREF_NAME = SHARED_PREF

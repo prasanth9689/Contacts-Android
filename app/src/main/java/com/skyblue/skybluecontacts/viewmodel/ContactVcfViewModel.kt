@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ContactVcfViewModel(private val repository: ContactVcfRepository) : ViewModel() {
-
     private val _contacts = MutableLiveData<List<ContactVcf>>()
     val contacts: LiveData<List<ContactVcf>> = _contacts
 
@@ -35,6 +34,10 @@ class ContactVcfViewModel(private val repository: ContactVcfRepository) : ViewMo
 
     fun getSelectedContacts(): List<ContactVcf> {
         return _contacts.value?.filter { it.isSelected } ?: emptyList()
+    }
+    fun deselectAll() {
+        val current = _contacts.value ?: return
+        _contacts.value = current.map { it.copy(isSelected = false) }
     }
 
     fun getSelectedCount(): Int {

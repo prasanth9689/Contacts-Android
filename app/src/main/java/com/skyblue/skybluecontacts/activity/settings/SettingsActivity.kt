@@ -5,28 +5,40 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.graphics.drawable.toDrawable
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.BaseActivity
-import com.skyblue.skybluecontacts.PreferenceHelper
+import com.skyblue.skybluecontacts.ContactsRoomViewModelFactory
+import com.skyblue.skybluecontacts.util.PreferenceHelper
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.activity.CloudContactsActivity
 import com.skyblue.skybluecontacts.activity.LoginActivity
 import com.skyblue.skybluecontacts.databinding.ActivitySettingsBinding
+import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.model.User
-import com.skyblue.skybluecontacts.showMessage
+import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
+import com.skyblue.skybluecontacts.room.AppDatabase
+import com.skyblue.skybluecontacts.util.showMessage
+import com.skyblue.skybluecontacts.viewmodel.ContactsRoomViewModel
+import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.util.Objects
 
 class SettingsActivity : BaseActivity() {
@@ -37,6 +49,9 @@ class SettingsActivity : BaseActivity() {
     private val TAG = "Settings_"
     private var langDialog: Dialog? = null
     private var selectedLanguage = 0
+    private val viewModel: ContactsViewModel by viewModels()
+    private lateinit var viewModelRoom: ContactsRoomViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +60,21 @@ class SettingsActivity : BaseActivity() {
 
         session = SessionHandler
         user = session.getUserDetails()!!
+
+        val contactDao = AppDatabase.getDatabase(this).contactDao()
+        val repository = ContactsRoomRepository(contactDao)
+        viewModelRoom = ViewModelProvider(this, ContactsRoomViewModelFactory(repository))[ContactsRoomViewModel::class.java]
+
+
+        onClick()
+    }
+
+    private fun onClick() {
+
+        binding.syncContacts.setOnClickListener {
+            binding.syncProgress.visibility = View.VISIBLE
+            synchContacts()
+        }
 
         binding.back.setOnClickListener {
             finish()
@@ -97,6 +127,37 @@ class SettingsActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+     fun synchContacts() {
+        showMessage("Sync started")
+
+        val jsonObject = JSONObject().apply {
+            put("acc", "get_contacts")
+            put("userId", user.userId)
+        }
+
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = jsonObject.toString().toRequestBody(mediaType)
+
+        viewModel.contacts.observe(this) { list ->
+            Log.d(TAG, "Fetched items: $list")
+
+            if (list.isNullOrEmpty()) {
+                showMessage(getString(R.string.no_contacts_found))
+                binding.syncProgress.visibility = View.GONE
+            }else{
+                val contactList = list.map {
+                    ContactsRoom(contactId = it.contactId, firstName = it.firstName, phoneNumber = it.phoneNumber)
+                }
+                viewModelRoom.deleteAllContacts()
+                viewModelRoom.insertContact(contactList)
+                viewModelRoom.getAllContacts()
+                showMessage(getString(R.string.contacts_sync_success))
+                binding.syncProgress.visibility = View.GONE
+            }
+        }
+        viewModel.fetchContacts(requestBody)
     }
 
     private fun initLanguage() {

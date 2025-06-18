@@ -73,7 +73,6 @@
     <string name="select_from_contacts">Select from contacts</string>
     <string name="add_manually">Add manually</string>
     <string name="import_vcf_file">Import .VCF file</string>
-    <string name="import_csv_file">Import .CSV file</string>
     <string name="open">Open</string>
     <string name="system_default">System default</string>
     <string name="choose_theme">Choose theme</string>
@@ -91,4 +90,9 @@
     <string name="name">Name</string>
     <string name="view_contacts_from_cloud">View contacts from cloud</string>
     <string name="search_contacts">Search contacts</string>
+    <string name="contacts_sync_success">Contacts sync success</string>
+    <string name="saving_please_wait">Saving please wait.</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="this_app_needs_access_to_your_storage_to_select_vcf_files">This app needs access to your storage to select VCF files.</string>
+    <string name="allow">Allow</string>
 </resources>

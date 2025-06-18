@@ -21,7 +21,6 @@ import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.activity.AddContactManuallyActivity
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
-import com.skyblue.skybluecontacts.activity.ImportContactsCsvActivity
 import com.skyblue.skybluecontacts.activity.ImportContactsVcfActivity
 import com.skyblue.skybluecontacts.activity.settings.SettingsActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
@@ -32,6 +31,7 @@ import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.model.User
 import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
 import com.skyblue.skybluecontacts.room.AppDatabase
+import com.skyblue.skybluecontacts.util.showMessage
 import com.skyblue.skybluecontacts.viewmodel.ContactsRoomViewModel
 import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -212,30 +212,37 @@ class RoomContactsActivity : BaseActivity() {
         val binding = BottomSheetAddContactBinding.inflate(layoutInflater)
         val view = binding.root
 
+        dialog.setOnDismissListener {
+            Log.d("BottomSheet", "Closed or Collapsed")
+           // showMessage("Closed or Collapsed")
+        }
+
         binding.selectFrContact.setOnClickListener {
             val intent = Intent(context, AddContactsDeviceActivity::class.java)
             startActivity(intent)
+            dialog.dismiss()
         }
 
         binding.addManually.setOnClickListener {
             val intent = Intent(context, AddContactManuallyActivity::class.java)
             startActivity(intent)
+            dialog.dismiss()
         }
 
         binding.importVcf.setOnClickListener {
             val intent = Intent(context, ImportContactsVcfActivity::class.java)
             startActivity(intent)
-        }
-
-        binding.importCsv.setOnClickListener {
-            val intent = Intent(context, ImportContactsCsvActivity::class.java)
-            startActivity(intent)
+            dialog.dismiss()
         }
 
         dialog.setContentView(view)
         dialog.show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModelRoom.getAllContacts()
+    }
 }
 
 class ContactsRoomViewModelFactory(private val repository: ContactsRoomRepository) : ViewModelProvider.Factory {

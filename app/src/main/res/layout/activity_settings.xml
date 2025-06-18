@@ -158,6 +158,88 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/syncContacts"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="60dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    tools:ignore="RtlSymmetry">
+
+                    <ImageView
+                        android:contentDescription="sync contacts"
+                        android:src="@drawable/ic_sync_cloud"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:tint="@color/textColor" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/syncCloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="1"
+                        android:text="Sync contacts"
+                        android:textColor="@color/textColor"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="Sync contacts now"
+                        android:textColor="#757575"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/syncProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                tools:ignore="RtlSymmetry"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:src="@drawable/progress_white"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:tint="@color/textColor" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/display"
             android:layout_width="match_parent"

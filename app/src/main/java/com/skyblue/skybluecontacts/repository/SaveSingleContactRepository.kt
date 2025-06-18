@@ -1,7 +1,6 @@
 package com.skyblue.skybluecontacts.repository
 
 
-import com.skyblue.skybluecontacts.model.ContactResponse
 import com.skyblue.skybluecontacts.model.SaveResponse
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
 import okhttp3.RequestBody

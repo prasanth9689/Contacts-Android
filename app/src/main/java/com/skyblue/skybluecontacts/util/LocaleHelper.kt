@@ -1,4 +1,4 @@
-package com.skyblue.skybluecontacts
+package com.skyblue.skybluecontacts.util
 
 import android.app.Activity
 import android.content.Context

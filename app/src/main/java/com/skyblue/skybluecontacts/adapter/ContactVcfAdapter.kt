@@ -1,5 +1,6 @@
 package com.skyblue.skybluecontacts.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,10 @@ import com.skyblue.skybluecontacts.model.ContactVcf
 
 class ContactVcfAdapter(
     private var contacts: List<ContactVcf>,
-    private val onItemClick: (Int) -> Unit  // <- You MUST declare this
+    private val onItemClick: (Int) -> Unit
 ) : RecyclerView.Adapter<ContactVcfAdapter.ViewHolder>() {
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(newList: List<ContactVcf>) {
         contacts = newList
         notifyDataSetChanged()
@@ -26,7 +28,6 @@ class ContactVcfAdapter(
         val container: View = view.findViewById(R.id.container)
 
         init {
-            // Call the onItemClick lambda with the current adapter position
             container.setOnClickListener {
                 onItemClick(adapterPosition)
             }

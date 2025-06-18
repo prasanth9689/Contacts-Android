@@ -27,6 +27,11 @@ class ContactsSelViewModel : ViewModel(){
         return !allSelected // Returns true if now selected, false if deselected
     }
 
+    fun deselectAll() {
+        val current = _contacts.value ?: return
+        _contacts.value = current.map { it.copy(isSelected = false) }
+    }
+
     fun getSelectedCount(): Int {
         return _contacts.value?.count { it.isSelected } ?: 0
     }

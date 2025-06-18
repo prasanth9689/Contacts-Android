@@ -14,7 +14,7 @@ import androidx.core.net.toUri
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.databinding.ActivityDialPadBinding
-import com.skyblue.skybluecontacts.showMessage
+import com.skyblue.skybluecontacts.util.showMessage
 
 class DialPadActivity : BaseActivity() {
     private lateinit var binding: ActivityDialPadBinding
@@ -30,6 +30,12 @@ class DialPadActivity : BaseActivity() {
         onClick();
 
         binding.number.setText("")
+        binding.saveContact.setOnClickListener {
+            val intent = Intent(context, AddContactManuallyActivity::class.java)
+            intent.putExtra("number", currentNumber)
+            startActivity(intent)
+        }
+
     }
     private fun onClick() {
         binding.one.setOnClickListener{
@@ -133,11 +139,6 @@ class DialPadActivity : BaseActivity() {
                 Log.i("Del__", "Delete after available text: " + mNUmber.toString())
                 Log.i("Del__", "Global currentNumber: " + currentNumber)
             }
-        }
-
-        binding.saveContact.setOnClickListener {
-            val mNumber = binding.number.text;
-
         }
     }
 

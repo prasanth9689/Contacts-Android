@@ -32,7 +32,6 @@ class ContactViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     private var firstNameTextView: TextView = itemView.findViewById(R.id.name)
     private var phoneNumberTextView: TextView = itemView.findViewById(R.id.phoneNumber)
 
-
     fun bind(contact: ContactsRoom) {
         firstNameTextView.text = contact.firstName
         phoneNumberTextView.text = contact.phoneNumber

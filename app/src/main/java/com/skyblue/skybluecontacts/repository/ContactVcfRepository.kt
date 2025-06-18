@@ -19,8 +19,6 @@ class ContactVcfRepository {
             val reader = BufferedReader(InputStreamReader(inputStream))
 
             reader.forEachLine { line ->
-                Log.d("VCF", "Line: $line") // already confirmed this works
-
                 when {
                     line.startsWith("FN") -> {
                         name = line.substringAfter(":").trim()
@@ -48,5 +46,4 @@ class ContactVcfRepository {
         Log.d("VCF", "Parsed Contacts: $contacts")
         return contacts
     }
-
 }

@@ -3,6 +3,7 @@ package com.skyblue.skybluecontacts
 import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
+import com.skyblue.skybluecontacts.util.PreferenceHelper
 import java.util.Locale
 
 open class BaseActivity : AppCompatActivity() {

@@ -21,14 +21,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.skyblue.skybluecontacts.session.SessionHandler
-import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
+import com.skyblue.skybluecontacts.util.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.RoomContactsActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
 import com.skyblue.skybluecontacts.model.Login
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
-import com.skyblue.skybluecontacts.showMessage
+import com.skyblue.skybluecontacts.util.showMessage
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody

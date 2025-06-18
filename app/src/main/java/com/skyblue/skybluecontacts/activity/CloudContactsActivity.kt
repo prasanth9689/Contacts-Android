@@ -18,7 +18,7 @@ import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityCloudContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
 import com.skyblue.skybluecontacts.model.User
-import com.skyblue.skybluecontacts.showMessage
+import com.skyblue.skybluecontacts.util.showMessage
 import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -128,10 +128,6 @@ class CloudContactsActivity : BaseActivity() {
 
         binding.importVcf.setOnClickListener {
             Toast.makeText(context, "Import .VCF file", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.importCsv.setOnClickListener {
-            Toast.makeText(context, "Import .CSV file", Toast.LENGTH_SHORT).show()
         }
 
         dialog.setContentView(view)

@@ -13,9 +13,9 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.drawable.toDrawable
-import com.skyblue.skybluecontacts.AppConstants.SHARED_PREF
+import com.skyblue.skybluecontacts.util.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.BaseActivity
-import com.skyblue.skybluecontacts.PreferenceHelper
+import com.skyblue.skybluecontacts.util.PreferenceHelper
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.databinding.ActivityDisplaySettingsBinding
 import java.util.Objects
