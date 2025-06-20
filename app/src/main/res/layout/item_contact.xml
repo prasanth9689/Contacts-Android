@@ -30,51 +30,89 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <RelativeLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/callNow"
             android:layout_width="50dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            app:cardCornerRadius="50dp"
+            app:cardBackgroundColor="@color/white"
+            android:elevation="0dp"
+            app:cardElevation="0dp"
+            android:background="@drawable/ic_round_circle">
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:contentDescription="@string/call"
-                android:src="@drawable/ic_call"
-                app:tint="@color/textColor"
-                android:layout_centerInParent="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bt_click_effect">
 
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/call"
+                    android:src="@drawable/ic_call"
+                    app:tint="@color/textColor"
+                    android:layout_centerInParent="true"/>
 
-        <RelativeLayout
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/messageNow"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="15dp">
+            android:layout_marginStart="15dp"
+            android:elevation="0dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="50dp"
+            app:cardBackgroundColor="@color/white"
+            android:background="@drawable/ic_round_circle">
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:contentDescription="@string/message"
-                android:src="@drawable/ic_message"
-                app:tint="@color/textColor"
-                android:layout_centerInParent="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bt_click_effect">
 
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/message"
+                    android:src="@drawable/ic_message"
+                    app:tint="@color/textColor"
+                    android:layout_centerInParent="true"/>
 
-        <RelativeLayout
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/whatsappNow"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="15dp">
+            android:layout_marginStart="15dp"
+            android:elevation="0dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="50dp"
+            app:cardBackgroundColor="@color/white"
+            android:background="@drawable/ic_round_circle">
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:contentDescription="@string/whatspp"
-                android:src="@drawable/ic_whatsapp"
-                android:layout_centerInParent="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bt_click_effect">
 
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/whatspp"
+                    android:src="@drawable/ic_whatsapp"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

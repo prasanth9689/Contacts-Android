@@ -1,15 +1,21 @@
 package com.skyblue.skybluecontacts
 
+import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -28,6 +34,7 @@ import com.skyblue.skybluecontacts.adapter.ContactsRoomAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityRoomContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
+import com.skyblue.skybluecontacts.model.Options
 import com.skyblue.skybluecontacts.model.User
 import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
 import com.skyblue.skybluecontacts.room.AppDatabase
@@ -39,6 +46,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import androidx.core.net.toUri
 
 class RoomContactsActivity : BaseActivity() {
     private lateinit var binding: ActivityRoomContactsBinding
@@ -50,6 +58,8 @@ class RoomContactsActivity : BaseActivity() {
     lateinit var user: User
     private lateinit var viewModelRoom: ContactsRoomViewModel
     private lateinit var adapterRoom: ContactsRoomAdapter
+    private val REQUEST_CALL_PERMISSION = 1
+    private var mPhoneNumber = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +91,33 @@ class RoomContactsActivity : BaseActivity() {
 
         lifecycleScope.launch {
             viewModelRoom.contacts.collectLatest { contacts ->
-                adapterRoom = ContactsRoomAdapter(contacts)
+                adapterRoom = ContactsRoomAdapter(
+                    contacts,
+                    onClick = {
+                        if (it.action.equals("call")){
+                            mPhoneNumber = it.phoneNumber
+                            if (mPhoneNumber.isNotEmpty()){
+
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    nowCallStart(mPhoneNumber)
+                                } else {
+                                    ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.CALL_PHONE), REQUEST_CALL_PERMISSION)
+                                }
+
+                            } else {
+                                showMessage(getString(R.string.phone_number_not_empty))
+                            }
+                        }
+
+                        if (it.action.equals("message")){
+                            openSmsApp(it.phoneNumber)
+                        }
+
+                        if (it.action.equals("whatsapp")){
+                            openWhatsAppChat(it.phoneNumber)
+                        }
+                    }
+                )
                 binding.recyclerView.adapter = adapterRoom
             }
         }
@@ -94,6 +130,41 @@ class RoomContactsActivity : BaseActivity() {
         searchEditText.setTextColor(getColor(R.color.primary))
 
         searchEditText.setHintTextColor(ContextCompat.getColor(context, R.color.textHintColor))
+    }
+
+    private fun openWhatsAppChat(phoneNumber: String) {
+        val formattedNumber = phoneNumber.replace("+", "").replace(" ", "")
+        val url = "https://wa.me/$formattedNumber"
+
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = url.toUri()
+            intent.setPackage("com.whatsapp")
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            showMessage("WhatsApp is not installed.")
+        }
+    }
+
+    private fun openSmsApp(phoneNumber: String) {
+        val uri = "smsto:$phoneNumber".toUri()
+        val intent = Intent(Intent.ACTION_SENDTO, uri)
+
+        if (intent.resolveActivity(context.packageManager) != null) {
+            context.startActivity(intent)
+        } else {
+            Toast.makeText(context, "No SMS app found.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun nowCallStart(phone: String) {
+        val phoneNumber = "tel:$phone"
+
+        val callIntent = Intent(Intent.ACTION_CALL).apply {
+            data = phoneNumber.toUri()
+        }
+
+        startActivity(callIntent)
     }
 
     private fun synchContacts() {
@@ -182,6 +253,10 @@ class RoomContactsActivity : BaseActivity() {
         viewModelRoom.filteredItems.observe(this) { contacts ->
             adapterRoom.updateData(contacts)
         }
+
+        val adapter = ContactsRoomAdapter(emptyList()) { contact ->
+            Toast.makeText(this, "Clicked: ${contact.action}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun openSearch(){
@@ -191,7 +266,7 @@ class RoomContactsActivity : BaseActivity() {
         binding.searchView.requestFocus()
         binding.searchView.requestFocusFromTouch()
 
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT)
     }
 
@@ -242,6 +317,24 @@ class RoomContactsActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         viewModelRoom.getAllContacts()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CALL_PERMISSION &&
+            grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            showMessage(getString(R.string.permission_granted))
+            nowCallStart(mPhoneNumber)
+            // Permission granted — retry the call or notify user
+        } else {
+            showMessage(getString(R.string.call_permission_denied))
+        }
     }
 }
 

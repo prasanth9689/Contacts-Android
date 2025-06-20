@@ -4,29 +4,29 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.skyblue.skybluecontacts.R
+import com.skyblue.skybluecontacts.databinding.ItemContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
+import com.skyblue.skybluecontacts.model.Options
 
-class ContactsRoomAdapter(private var contacts: List<ContactsRoom>) : RecyclerView.Adapter<ContactViewHolder>() {
+class ContactsRoomAdapter(private var contacts: List<ContactsRoom>,
+                         private val onClick: (Options) -> Unit
+) : RecyclerView.Adapter<ContactViewHolder>() {
     private var selectedPosition = RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return ContactViewHolder(inflater, parent)
+        val binding = ItemContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ContactViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.bind(contacts[position])
 
-
-            holder.itemView.setOnClickListener {
+         holder.itemView.setOnClickListener {
                 val previousPosition = selectedPosition
                 selectedPosition = position
 
-                // Only update if clicked a different item
                 if (previousPosition != selectedPosition) {
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
@@ -35,9 +35,25 @@ class ContactsRoomAdapter(private var contacts: List<ContactsRoom>) : RecyclerVi
 
 
         if (position == selectedPosition) {
-            holder.optionsLayout.visibility = View.VISIBLE
+            holder.binding.optionsLayout.visibility = View.VISIBLE
         } else {
-            holder.optionsLayout.visibility = View.GONE
+            holder.binding.optionsLayout.visibility = View.GONE
+        }
+
+        holder.binding.callNow.setOnClickListener {
+
+            val options = Options("call", contacts[position].firstName, contacts[position].phoneNumber)
+            onClick(options)
+        }
+
+        holder.binding.messageNow.setOnClickListener {
+            val options = Options("message", contacts[position].firstName, contacts[position].phoneNumber)
+            onClick(options)
+        }
+
+        holder.binding.whatsappNow.setOnClickListener {
+            val options = Options("whatsapp", contacts[position].firstName, contacts[position].phoneNumber)
+            onClick(options)
         }
     }
 
@@ -50,14 +66,10 @@ class ContactsRoomAdapter(private var contacts: List<ContactsRoom>) : RecyclerVi
     }
 }
 
-class ContactViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
-    RecyclerView.ViewHolder(inflater.inflate(R.layout.item_contact, parent, false)) {
-    private var firstNameTextView: TextView = itemView.findViewById(R.id.name)
-    private var phoneNumberTextView: TextView = itemView.findViewById(R.id.phoneNumber)
-    var optionsLayout: LinearLayout = itemView.findViewById(R.id.optionsLayout)
-
-    fun bind(contact: ContactsRoom) {
-        firstNameTextView.text = contact.firstName
-        phoneNumberTextView.text = contact.phoneNumber
+class ContactViewHolder(val binding: ItemContactBinding) :
+    RecyclerView.ViewHolder(binding.root){
+        fun bind(contact: ContactsRoom) {
+            binding.name.text = contact.firstName
+            binding.phoneNumber.text = contact.phoneNumber
+        }
     }
-}
