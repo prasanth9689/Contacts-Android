@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="buttonColor">#77767b</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#08273E</color>
+    <color name="shimmer_placeholder">#dddddd</color>
+    <color name="selected_text_color">#000000</color>
+    <color name="default_text_color">#08273E</color>
+    <color name="selected_background_color">#dddddd</color>
+    <color name="light_grey">#F9F9FA</color>
+    <color name="shadow_2">#dddddd</color>
+
+    <!--    For Night/Dark Mode-->
+    <color name="backgroundColor">#0b141b</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="textLightColor">#F4F4F4</color>
+    <color name="cardBackgroundColor">#142532</color>
+    <color name="vectorColor">#FFFFFF</color>
+    <color name="textCardColor">#535557</color>
+    <color name="textHintColor">#636566</color>
+    <color name="errorBackgroundColor">#545657</color>
+    <color name="textColorError">#B5B8BC</color>
+    <color name="textColorCustomButton">#FFFFFF</color>
+    <color name="backgroundCustomButton">#535557</color>
+    <color name="bottomNavigationIconColor">#B5B8BC</color>
+</resources>

@@ -95,4 +95,9 @@
     <string name="permission_required">Permission Required</string>
     <string name="this_app_needs_access_to_your_storage_to_select_vcf_files">This app needs access to your storage to select VCF files.</string>
     <string name="allow">Allow</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
+    <string name="whatspp">Whatspp</string>
+    <string name="first_name" translatable="false">First name</string>
+    <string name="phone_" translatable="false">1234567890</string>
 </resources>
