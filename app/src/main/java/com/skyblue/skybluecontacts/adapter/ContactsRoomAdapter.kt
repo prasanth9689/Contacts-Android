@@ -1,20 +1,19 @@
 package com.skyblue.skybluecontacts.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.skyblue.skybluecontacts.ContactsDiffCallback
 import com.skyblue.skybluecontacts.databinding.ItemContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.model.Options
-import retrofit2.http.Tag
 
-class ContactsRoomAdapter(private var contacts: List<ContactsRoom>,
+class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
                          private val onClick: (Options) -> Unit
-) : RecyclerView.Adapter<ContactViewHolder>() {
+                         ) : RecyclerView.Adapter<ContactViewHolder>() {
     private var selectedPosition = RecyclerView.NO_POSITION
     private var expandedPosition: Int? = null
     private val TAG = "RoomAdapter_"
@@ -26,8 +25,6 @@ class ContactsRoomAdapter(private var contacts: List<ContactsRoom>,
 
     override fun onBindViewHolder(holder: ContactViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.bind(contacts[position])
-
-
 
          holder.itemView.setOnClickListener {
              // Temp solution for expand and close. again expand same item or id
@@ -54,21 +51,43 @@ class ContactsRoomAdapter(private var contacts: List<ContactsRoom>,
         } else {
             holder.binding.optionsLayout.visibility = View.GONE
         }
-
+        val contact = contacts[position]
         holder.binding.callNow.setOnClickListener {
 
-            val options = Options("call", contacts[position].firstName, contacts[position].phoneNumber)
+            val options = Options("call",
+                contacts[position].firstName,
+                contacts[position].phoneNumber,
+                holder.itemView,
+                contact = contact)
             onClick(options)
         }
 
         holder.binding.messageNow.setOnClickListener {
-            val options = Options("message", contacts[position].firstName, contacts[position].phoneNumber)
+            val options = Options("message",
+                contacts[position].firstName,
+                contacts[position].phoneNumber,
+                holder.itemView,
+                contact = contact)
             onClick(options)
         }
 
         holder.binding.whatsappNow.setOnClickListener {
-            val options = Options("whatsapp", contacts[position].firstName, contacts[position].phoneNumber)
+            val options = Options("whatsapp",
+                contacts[position].firstName,
+                contacts[position].phoneNumber,
+                holder.itemView,
+                contact = contact)
             onClick(options)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            val options = Options("delete",
+                contacts[position].firstName,
+                contacts[position].phoneNumber,
+                holder.itemView,
+                contact = contact)
+            onClick(options)
+            true
         }
     }
 
@@ -76,10 +95,28 @@ class ContactsRoomAdapter(private var contacts: List<ContactsRoom>,
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newContacts: List<ContactsRoom>) {
-        contacts = newContacts
+        contacts = newContacts.toMutableList()
         notifyDataSetChanged()
     }
+
+    fun updateList(newList: List<ContactsRoom>) {
+        val diffCallback = ContactsDiffCallback(contacts, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        contacts.clear()
+        contacts.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+
+    fun removeItem(contact: ContactsRoom) {
+        val newList = contacts.toMutableList()
+        newList.remove(contact)
+        updateList(newList)
+    }
 }
+
+
 
 class ContactViewHolder(val binding: ItemContactBinding) :
     RecyclerView.ViewHolder(binding.root){

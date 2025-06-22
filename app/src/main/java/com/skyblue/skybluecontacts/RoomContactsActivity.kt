@@ -1,43 +1,50 @@
 package com.skyblue.skybluecontacts
 
 import android.Manifest
+import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.Rect
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.activity.AddContactManuallyActivity
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
 import com.skyblue.skybluecontacts.activity.ImportContactsVcfActivity
+import com.skyblue.skybluecontacts.activity.MultipleSelectionActivity
 import com.skyblue.skybluecontacts.activity.settings.SettingsActivity
 import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.adapter.ContactsRoomAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityRoomContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
-import com.skyblue.skybluecontacts.model.Options
 import com.skyblue.skybluecontacts.model.User
 import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
 import com.skyblue.skybluecontacts.room.AppDatabase
+import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.util.showMessage
 import com.skyblue.skybluecontacts.viewmodel.ContactsRoomViewModel
 import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
@@ -46,7 +53,6 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import androidx.core.net.toUri
 
 class RoomContactsActivity : BaseActivity() {
     private lateinit var binding: ActivityRoomContactsBinding
@@ -60,6 +66,7 @@ class RoomContactsActivity : BaseActivity() {
     private lateinit var adapterRoom: ContactsRoomAdapter
     private val REQUEST_CALL_PERMISSION = 1
     private var mPhoneNumber = ""
+    private var moreDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +99,7 @@ class RoomContactsActivity : BaseActivity() {
         lifecycleScope.launch {
             viewModelRoom.contacts.collectLatest { contacts ->
                 adapterRoom = ContactsRoomAdapter(
-                    contacts,
+                    contacts.toMutableList(),
                     onClick = {
                         if (it.action.equals("call")){
                             mPhoneNumber = it.phoneNumber
@@ -116,6 +123,10 @@ class RoomContactsActivity : BaseActivity() {
                         if (it.action.equals("whatsapp")){
                             openWhatsAppChat(it.phoneNumber)
                         }
+
+                        if (it.action.equals("delete")){
+                            initMoreDialog(it.view, it.contact)
+                        }
                     }
                 )
                 binding.recyclerView.adapter = adapterRoom
@@ -130,6 +141,48 @@ class RoomContactsActivity : BaseActivity() {
         searchEditText.setTextColor(getColor(R.color.primary))
 
         searchEditText.setHintTextColor(ContextCompat.getColor(context, R.color.textHintColor))
+    }
+
+    private fun initMoreDialog(anchorView: View, contactsRoom: ContactsRoom) {
+        val popupView = LayoutInflater.from(context).inflate(R.layout.item_select_more_options, null)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true // Focusable
+        )
+
+        popupWindow.setBackgroundDrawable(Color.WHITE.toDrawable())
+        popupWindow.elevation = 10f
+
+        popupView.findViewById<RelativeLayout>(R.id.delete).setOnClickListener {
+            adapterRoom.removeItem(contactsRoom)
+            Toast.makeText(context, "Delete clicked", Toast.LENGTH_SHORT).show()
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<RelativeLayout>(R.id.select).setOnClickListener {
+            //Toast.makeText(context, "Edit clicked", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(context, MultipleSelectionActivity::class.java))
+            popupWindow.dismiss()
+        }
+
+        popupWindow.showAsDropDown(anchorView, 100, 0) // You can offset with x/y if needed
+    }
+
+    private fun showOptionsDialog(firstName: String, phoneNumber: String) {
+        AlertDialog.Builder(context)
+            .setTitle("Contact Options")
+            .setMessage("What would you like to do with ${firstName}?")
+            .setPositiveButton("Delete") { _, _ ->
+                // Handle delete action
+                Toast.makeText(context, "${firstName} deleted", Toast.LENGTH_SHORT).show()
+
+
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun openWhatsAppChat(phoneNumber: String) {
@@ -253,10 +306,6 @@ class RoomContactsActivity : BaseActivity() {
         viewModelRoom.filteredItems.observe(this) { contacts ->
             adapterRoom.updateData(contacts)
         }
-
-        val adapter = ContactsRoomAdapter(emptyList()) { contact ->
-            Toast.makeText(this, "Clicked: ${contact.action}", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun openSearch(){
@@ -289,7 +338,6 @@ class RoomContactsActivity : BaseActivity() {
 
         dialog.setOnDismissListener {
             Log.d("BottomSheet", "Closed or Collapsed")
-           // showMessage("Closed or Collapsed")
         }
 
         binding.selectFrContact.setOnClickListener {
