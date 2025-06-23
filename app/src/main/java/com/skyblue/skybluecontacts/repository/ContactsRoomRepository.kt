@@ -5,6 +5,11 @@ import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.room.ContactsRoomDao
 
 class ContactsRoomRepository(private val contactDao: ContactsRoomDao) {
+
+        suspend fun deleteContactByContactId(contactId: Int) {
+            contactDao.deleteContactByContactId(contactId)
+        }
+
     suspend fun insertContact(contact: List<ContactsRoom>) = contactDao.insertContact(contact)
     suspend fun getAllContacts() = contactDao.getAllContacts()
 
@@ -12,9 +17,4 @@ class ContactsRoomRepository(private val contactDao: ContactsRoomDao) {
     suspend fun isContactsEmpty(): Boolean {
         return contactDao.getContactsCount() == 0
     }
-
-    fun searchContacts(query: String): LiveData<List<ContactsRoom>> {
-        return contactDao.searchContacts(query)
-    }
-
 }

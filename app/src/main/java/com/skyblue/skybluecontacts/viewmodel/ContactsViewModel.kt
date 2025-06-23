@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skyblue.skybluecontacts.model.Contacts
+import com.skyblue.skybluecontacts.model.DeleteSingleCloud
 import com.skyblue.skybluecontacts.repository.ContactsRepository
 import kotlinx.coroutines.launch
 import okhttp3.RequestBody
@@ -17,6 +18,9 @@ class ContactsViewModel : ViewModel(){
     private val _filteredItems = MutableLiveData<List<Contacts>>()
     val filteredItems: LiveData<List<Contacts>> get() = _filteredItems
     val contacts: LiveData<List<Contacts>> = _contacts
+
+    private val _deleteContact = MutableLiveData<Boolean>()
+    val isdeleteContact: LiveData<Boolean> = _deleteContact
 
     fun fetchContacts(requestBody: RequestBody){
         viewModelScope.launch {
@@ -45,6 +49,23 @@ class ContactsViewModel : ViewModel(){
             originalList.filter { item ->
                 item.firstName.contains(lowerQuery, ignoreCase = true) ||
                         item.firstName.contains(lowerQuery, ignoreCase = true)
+            }
+        }
+    }
+
+    fun deleteCloudContact(deleteSingleCloud: DeleteSingleCloud){
+        viewModelScope.launch {
+            try {
+                val response = repository.deleteCloudContact(deleteSingleCloud)
+                if (response.status == "true") {
+                    _deleteContact.value = true
+                    Log.d(TAG, "Contact deleted successfully")
+                } else {
+                    _deleteContact.value = false
+                    Log.d(TAG, "Contact deleted successfully")
+                }
+            } catch (e: Exception){
+                Log.e(TAG, "error: " + e.message.toString())
             }
         }
     }

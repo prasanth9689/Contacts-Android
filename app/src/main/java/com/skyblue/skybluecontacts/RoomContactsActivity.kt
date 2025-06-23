@@ -1,7 +1,6 @@
 package com.skyblue.skybluecontacts
 
 import android.Manifest
-import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -34,13 +33,12 @@ import com.skyblue.skybluecontacts.activity.AddContactManuallyActivity
 import com.skyblue.skybluecontacts.activity.AddContactsDeviceActivity
 import com.skyblue.skybluecontacts.activity.DialPadActivity
 import com.skyblue.skybluecontacts.activity.ImportContactsVcfActivity
-import com.skyblue.skybluecontacts.activity.MultipleSelectionActivity
 import com.skyblue.skybluecontacts.activity.settings.SettingsActivity
-import com.skyblue.skybluecontacts.adapter.ContactAdapter
 import com.skyblue.skybluecontacts.adapter.ContactsRoomAdapter
 import com.skyblue.skybluecontacts.databinding.ActivityRoomContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
+import com.skyblue.skybluecontacts.model.DeleteSingleCloud
 import com.skyblue.skybluecontacts.model.User
 import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
 import com.skyblue.skybluecontacts.room.AppDatabase
@@ -59,14 +57,12 @@ class RoomContactsActivity : BaseActivity() {
     private val context = this
     val TAG = "RoomContacts_"
     private val viewModel: ContactsViewModel by viewModels()
-    private lateinit var adapter: ContactAdapter
     lateinit var session: SessionHandler
     lateinit var user: User
     private lateinit var viewModelRoom: ContactsRoomViewModel
     private lateinit var adapterRoom: ContactsRoomAdapter
     private val REQUEST_CALL_PERMISSION = 1
     private var mPhoneNumber = ""
-    private var moreDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +98,7 @@ class RoomContactsActivity : BaseActivity() {
                     contacts.toMutableList(),
                     onClick = {
                         if (it.action.equals("call")){
-                            mPhoneNumber = it.phoneNumber
+                            mPhoneNumber = it.contact.phoneNumber
                             if (mPhoneNumber.isNotEmpty()){
 
                                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
@@ -116,15 +112,15 @@ class RoomContactsActivity : BaseActivity() {
                             }
                         }
 
-                        if (it.action.equals("message")){
-                            openSmsApp(it.phoneNumber)
+                        if (it.action == "message"){
+                            openSmsApp(it.contact.phoneNumber)
                         }
 
-                        if (it.action.equals("whatsapp")){
-                            openWhatsAppChat(it.phoneNumber)
+                        if (it.action == "whatsapp"){
+                            openWhatsAppChat(it.contact.phoneNumber)
                         }
 
-                        if (it.action.equals("delete")){
+                        if (it.action == "delete"){
                             initMoreDialog(it.view, it.contact)
                         }
                     }
@@ -158,17 +154,35 @@ class RoomContactsActivity : BaseActivity() {
 
         popupView.findViewById<RelativeLayout>(R.id.delete).setOnClickListener {
             adapterRoom.removeItem(contactsRoom)
-            Toast.makeText(context, "Delete clicked", Toast.LENGTH_SHORT).show()
+            showMessage(getString(R.string.deleted_success))
+            deleteSingleContact(contactsRoom)
+           // Toast.makeText(context, "Delete clicked ${contactsRoom.contactId}", Toast.LENGTH_SHORT).show()
             popupWindow.dismiss()
         }
 
         popupView.findViewById<RelativeLayout>(R.id.select).setOnClickListener {
             //Toast.makeText(context, "Edit clicked", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(context, MultipleSelectionActivity::class.java))
+            // startActivity(Intent(context, MultipleSelectionActivity::class.java))
             popupWindow.dismiss()
         }
 
         popupWindow.showAsDropDown(anchorView, 100, 0) // You can offset with x/y if needed
+    }
+
+    private fun deleteSingleContact(contactsRoom: ContactsRoom) {
+        val deleteSingleCloud = DeleteSingleCloud("delete_contact",
+            user.userId.toString(),
+            contactsRoom.contactId)
+
+        viewModel.isdeleteContact.observe(this){
+            if (it){
+                viewModelRoom.deleteContact(contactsRoom.contactId.toInt())
+            }else{
+                showMessage(getString(R.string.error_deleting_contact))
+            }
+        }
+
+        viewModel.deleteCloudContact(deleteSingleCloud)
     }
 
     private fun showOptionsDialog(firstName: String, phoneNumber: String) {
@@ -362,11 +376,6 @@ class RoomContactsActivity : BaseActivity() {
         dialog.show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModelRoom.getAllContacts()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -384,7 +393,51 @@ class RoomContactsActivity : BaseActivity() {
             showMessage(getString(R.string.call_permission_denied))
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModelRoom.isEmpty.observe(this) { isEmpty ->
+            if (isEmpty) {
+                showMessage("Sync started")
+
+                val jsonObject = JSONObject().apply {
+                    put("acc", "get_contacts")
+                    put("userId", user.userId)
+                }
+
+                val mediaType = "application/json; charset=utf-8".toMediaType()
+                val requestBody = jsonObject.toString().toRequestBody(mediaType)
+
+                viewModel.contacts.observe(this) { list ->
+                    Log.d(TAG, "Fetched items: $list")
+                    if (list.isNullOrEmpty()) {
+                        showMessage(getString(R.string.no_contacts_found))
+                    }else{
+                        val contactList = list.map {
+                            ContactsRoom(contactId = it.contactId, firstName = it.firstName, phoneNumber = it.phoneNumber)
+                        }
+                        viewModelRoom.deleteAllContacts()
+                        viewModelRoom.insertContact(contactList)
+                        viewModelRoom.getAllContacts()
+                        showMessage(getString(R.string.contacts_sync_success))
+                    }
+                }
+                viewModel.fetchContacts(requestBody)
+                Log.d(TAG, " onResume: No contacts found! in local room database \n Fetching contacts from server")
+                showMessage(getString(R.string.contacts_sync_please_wait))
+            } else {
+                lifecycleScope.launch {
+                    viewModelRoom.contacts.collectLatest {
+                        binding.recyclerView.adapter = adapterRoom
+                    }
+                }
+                viewModelRoom.getAllContacts()
+                Log.d(TAG, " onResume:  Contacts are available. in local room database")
+            }
+        }
+    }
 }
+
 
 class ContactsRoomViewModelFactory(private val repository: ContactsRoomRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

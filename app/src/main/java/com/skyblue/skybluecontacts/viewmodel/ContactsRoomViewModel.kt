@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skyblue.skybluecontacts.model.Contacts
 import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +50,12 @@ class ContactsRoomViewModel(private val repository: ContactsRoomRepository) : Vi
             originalList.filter { item ->
                 item.firstName.contains(lowerQuery, ignoreCase = true)
             }
+        }
+    }
+
+    fun deleteContact(contactId: Int) {
+        viewModelScope.launch {
+            repository.deleteContactByContactId(contactId)
         }
     }
 }

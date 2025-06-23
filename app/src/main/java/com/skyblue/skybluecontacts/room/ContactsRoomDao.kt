@@ -9,6 +9,10 @@ import com.skyblue.skybluecontacts.model.ContactsRoom
 
 @Dao
 interface ContactsRoomDao {
+
+    @Query("DELETE FROM contacts WHERE contactId = :contactId")
+    suspend fun deleteContactByContactId(contactId: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContact(contact: List<ContactsRoom>)
 

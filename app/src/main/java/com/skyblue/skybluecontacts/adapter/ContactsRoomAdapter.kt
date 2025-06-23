@@ -16,7 +16,6 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
                          ) : RecyclerView.Adapter<ContactViewHolder>() {
     private var selectedPosition = RecyclerView.NO_POSITION
     private var expandedPosition: Int? = null
-    private val TAG = "RoomAdapter_"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val binding = ItemContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -55,8 +54,6 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
         holder.binding.callNow.setOnClickListener {
 
             val options = Options("call",
-                contacts[position].firstName,
-                contacts[position].phoneNumber,
                 holder.itemView,
                 contact = contact)
             onClick(options)
@@ -64,8 +61,6 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
 
         holder.binding.messageNow.setOnClickListener {
             val options = Options("message",
-                contacts[position].firstName,
-                contacts[position].phoneNumber,
                 holder.itemView,
                 contact = contact)
             onClick(options)
@@ -73,8 +68,6 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
 
         holder.binding.whatsappNow.setOnClickListener {
             val options = Options("whatsapp",
-                contacts[position].firstName,
-                contacts[position].phoneNumber,
                 holder.itemView,
                 contact = contact)
             onClick(options)
@@ -82,8 +75,6 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
 
         holder.itemView.setOnLongClickListener {
             val options = Options("delete",
-                contacts[position].firstName,
-                contacts[position].phoneNumber,
                 holder.itemView,
                 contact = contact)
             onClick(options)
@@ -108,15 +99,12 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
         diffResult.dispatchUpdatesTo(this)
     }
 
-
     fun removeItem(contact: ContactsRoom) {
         val newList = contacts.toMutableList()
         newList.remove(contact)
         updateList(newList)
     }
 }
-
-
 
 class ContactViewHolder(val binding: ItemContactBinding) :
     RecyclerView.ViewHolder(binding.root){

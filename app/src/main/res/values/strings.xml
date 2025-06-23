@@ -100,4 +100,6 @@
     <string name="whatspp">Whatspp</string>
     <string name="first_name" translatable="false">First name</string>
     <string name="phone_" translatable="false">1234567890</string>
+    <string name="error_deleting_contact">Error delete contact!</string>
+    <string name="deleted_success">Deleted success!</string>
 </resources>
