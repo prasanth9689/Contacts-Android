@@ -71,6 +71,14 @@ class SettingsActivity : BaseActivity() {
 
     private fun onClick() {
 
+        binding.trash.setOnClickListener {
+            startActivity(Intent(context, TrashActivity::class.java))
+        }
+
+        binding.trash.setOnClickListener {
+            startActivity(Intent(context, TrashActivity::class.java))
+        }
+
         binding.syncContacts.setOnClickListener {
             binding.syncProgress.visibility = View.VISIBLE
             synchContacts()

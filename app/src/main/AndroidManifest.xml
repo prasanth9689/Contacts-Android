@@ -33,6 +33,12 @@
         android:theme="@style/Theme.SkyblueContacts"
         tools:targetApi="31">
         <activity
+            android:name=".activity.settings.TrashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AccountActivity"
+            android:exported="false" />
+        <activity
             android:name=".encrypt.EncryptSaveManualActivity"
             android:exported="false" />
         <activity

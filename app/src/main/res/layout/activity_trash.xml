@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activity.settings.TrashActivity">
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:background="@color/backgroundColor">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/back_button"
+            android:src="@drawable/btn_back"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:tint="@color/textColor" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/back"
+            android:fontFamily="sans-serif-medium"
+            android:text="Trash"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+            <include layout="@layout/item_list_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="Empty trash!"
+                android:src="@drawable/ic_trash"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:textSize="17sp"
+                android:text="Empty trash!"/>
+
+<!--            <Button-->
+<!--                android:id="@+id/addContacts"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/btn_black"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:text="@string/add_contacts" />-->
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
