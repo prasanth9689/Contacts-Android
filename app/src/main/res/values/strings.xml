@@ -102,4 +102,35 @@
     <string name="phone_" translatable="false">1234567890</string>
     <string name="error_deleting_contact">Error delete contact!</string>
     <string name="deleted_success">Deleted success!</string>
+    <string name="about">About</string>
+    <string name="skyblue_contacts">Skyblue contacts</string>
+    <string name="a_safe_type_contact_app">A safe type contact app</string>
+    <string name="developer_message">To protect contacts from other apps. Highly secured end-to-end encryption technology was used. Cloud contacts are never stored in the mobile device\'s default contacts storage and SIM storage. Users can access contacts synced from the server can be accessible Offline. Easily access with premium features dark mode and light mode, with increase app font size. Stunning UI. Users can delete contacts permanently from cloud storage.</string>
+    <string name="no_premium_purchases_and_no_ads">`No premium purchases. and No ads \n 100% Free`</string>
+    <string name="prasanth">- Prasanth</string>
+    <string name="make_a_small_donation">Make a small donation via Paypal</string>
+    <string name="make_payment_now">Make payment now</string>
+    <string name="delete_account">Delete account</string>
+    <string name="permanently_delete_your_account">Permanently delete your account</string>
+    <string name="app_permissions">App permissions</string>
+    <string name="contact">Contact</string>
+    <string name="to_access_mobile_contacts_message">To access mobile contacts for user can add contacts to cloud. synch after you can use offline. \n \nContacts are securely transferred to the cloud with end-to-end encryption.</string>
+    <string name="user_can_make_calls_from_cloud_message">User can make calls from cloud synced contacts. and make calls from skyblue contacts app dialpad.</string>
+    <string name="storage">Storage</string>
+    <string name="import_contacts_from_vcf_file">Import contacts from .VCF file</string>
+    <string name="continue_">Continue</string>
+    <string name="loading_privacy_policy">Loading privacy policy</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="agree">Agree</string>
+    <string name="welcome_to_nskyblue_contacts">Welcome to \nSkyblue contacts</string>
+    <string name="no_ads_no_purchase">No ads No purchase</string>
+    <string name="_100_free">100% Free</string>
+    <string name="sync_contacts">sync contacts</string>
+    <string name="sync_contacts_now">Sync contacts now</string>
+    <string name="trash">Trash</string>
+    <string name="deleted_contacts">Deleted contacts and restore</string>
+    <string name="about_app">About app</string>
+    <string name="app_development_info">App development info</string>
+    <string name="delete">Delete</string>
+    <string name="select">Select</string>
 </resources>

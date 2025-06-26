@@ -31,8 +31,14 @@ class TrashAdapter(private var contacts: MutableList<TrashContact>,
                 holder.itemView,
                 trashContact = contact)
             onClick(options)
-            // Handle item click
-          //  Toast.makeText(holder.itemView.context, "Clicked on ${contact.firstName}", Toast.LENGTH_SHORT).show()
+        }
+
+        holder.itemView.setOnLongClickListener{
+            val options = OptionsTrash("delete",
+                holder.itemView,
+                trashContact = contact)
+            onClick(options)
+            true
         }
     }
 
@@ -58,6 +64,5 @@ class TrashAdapter(private var contacts: MutableList<TrashContact>,
     }
 
     class ContactViewHolder(val binding: ItemListTrashBinding) :
-        RecyclerView.ViewHolder(binding.root){
-    }
+        RecyclerView.ViewHolder(binding.root)
 }

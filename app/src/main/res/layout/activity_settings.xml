@@ -49,6 +49,7 @@
         android:layout_marginTop="60dp" >
 
         <LinearLayout
+            android:id="@+id/myAccount"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:clickable="true"
@@ -180,7 +181,7 @@
                     tools:ignore="RtlSymmetry">
 
                     <ImageView
-                        android:contentDescription="sync contacts"
+                        android:contentDescription="@string/sync_contacts"
                         android:src="@drawable/ic_sync_cloud"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -200,7 +201,7 @@
                         android:layout_marginStart="12dp"
                         android:fontFamily="sans-serif-medium"
                         android:maxLines="1"
-                        android:text="Sync contacts"
+                        android:text="@string/sync_contacts"
                         android:textColor="@color/textColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -211,7 +212,7 @@
                         android:layout_marginStart="12dp"
                         android:fontFamily="sans-serif"
                         android:maxLines="1"
-                        android:text="Sync contacts now"
+                        android:text="@string/sync_contacts_now"
                         android:textColor="#757575"
                         android:textSize="14sp" />
 
@@ -251,7 +252,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -261,7 +263,7 @@
                     tools:ignore="RtlSymmetry">
 
                     <ImageView
-                        android:contentDescription="Trash"
+                        android:contentDescription="@string/trash"
                         android:src="@drawable/ic_trash"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -280,7 +282,7 @@
                         android:layout_marginStart="12dp"
                         android:fontFamily="sans-serif-medium"
                         android:maxLines="1"
-                        android:text="Trash"
+                        android:text="@string/trash"
                         android:textColor="@color/textColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -291,7 +293,7 @@
                         android:layout_marginStart="12dp"
                         android:fontFamily="sans-serif"
                         android:maxLines="1"
-                        android:text="Deleted contacts"
+                        android:text="@string/deleted_contacts"
                         android:textColor="#757575"
                         android:textSize="14sp" />
 
@@ -404,6 +406,61 @@
                     android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text="@string/english_device_default_language"
+                    android:textColor="#757575"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/about"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                tools:ignore="RtlSymmetry">
+
+                <ImageView
+                    android:contentDescription="@string/about_app"
+                    android:src="@drawable/ic_about"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:tint="@color/textColor" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:text="@string/about"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:text="@string/app_development_info"
                     android:textColor="#757575"
                     android:textSize="14sp" />
 

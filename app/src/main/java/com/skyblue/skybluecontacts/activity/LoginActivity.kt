@@ -1,11 +1,13 @@
 package com.skyblue.skybluecontacts.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
@@ -21,14 +23,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import com.skyblue.skybluecontacts.session.SessionHandler
-import com.skyblue.skybluecontacts.util.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.RoomContactsActivity
 import com.skyblue.skybluecontacts.databinding.ActivityLoginBinding
 import com.skyblue.skybluecontacts.model.Login
 import com.skyblue.skybluecontacts.retrofit.RetrofitInstance
+import com.skyblue.skybluecontacts.session.SessionHandler
+import com.skyblue.skybluecontacts.util.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.util.showMessage
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -71,8 +73,71 @@ class LoginActivity : BaseActivity() {
         onClick()
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun onClick() {
-        binding.google.setOnClickListener(){
+
+        binding.appPermissionButton.setOnClickListener {
+            binding.appPermissionsLayout.visibility = View.GONE
+            binding.googleSignInLayout.visibility = View.VISIBLE
+        }
+
+        binding.agreePrivacyPolicyButton.setOnClickListener {
+            binding.privacyPolicyLayout.visibility = View.GONE
+            binding.appPermissionsLayout.visibility = View.VISIBLE
+        }
+
+        binding.continueWelcomeButton.setOnClickListener {
+            binding.privacyPolicyLayout.visibility = View.VISIBLE
+            binding.welComeScreenLayout.visibility = View.GONE
+
+            binding.webView.settings.javaScriptEnabled = true
+
+            binding.webView.webViewClient = object : WebViewClient() {
+                @Deprecated("Deprecated in Java")
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    view.loadUrl(url)
+                    return true
+                }
+            }
+
+
+            binding.webView.webViewClient = object : WebViewClient() {
+                @Deprecated("Deprecated in Java")
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    view.loadUrl(url)
+                    return true
+                }
+
+                override fun onPageFinished(view: WebView, url: String) {
+                    super.onPageFinished(view, url)
+                    // Hide spinner and show WebView
+                        binding.privacyPolicyProgressBar.visibility = View.GONE
+                        binding.webView.visibility = View.VISIBLE
+                        binding.agreePrivacyPolicyButton.visibility = View.VISIBLE
+                }
+            }
+
+            binding.webView.loadUrl("https://contacts.skyblue.co.in/pages/privacy_policy.html")
+
+
+//            binding.webView.webChromeClient = object : WebChromeClient() {
+//                override fun onProgressChanged(view: WebView, newProgress: Int) {
+//                    title = "Loading... $newProgress%"
+//                    if (newProgress == 100) title = view.title
+//
+//                    if (newProgress == 100){
+//                        binding.progressBar.visibility = View.GONE
+//                        binding.webView.visibility = View.GONE
+//                        binding.agreePrivacyPolicyButton.visibility = View.VISIBLE
+//                    }
+//
+//                    binding.webView.loadUrl("https://contacts.skyblue.co.in/pages/privacy_policy.html")
+//                }
+//            }
+        }
+
+
+        binding.google.setOnClickListener {
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setServerClientId(getString(R.string.client_id))
                 .setFilterByAuthorizedAccounts(true)

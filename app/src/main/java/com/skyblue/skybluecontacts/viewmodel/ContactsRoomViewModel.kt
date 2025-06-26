@@ -58,4 +58,10 @@ class ContactsRoomViewModel(private val repository: ContactsRoomRepository) : Vi
             repository.deleteContactByContactId(contactId)
         }
     }
+
+    fun clearRoomDatabase(){
+        viewModelScope.launch {
+            repository.clearRoomDatabase()
+        }
+    }
 }

@@ -23,6 +23,7 @@ import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.ContactsRoomViewModelFactory
 import com.skyblue.skybluecontacts.util.PreferenceHelper
 import com.skyblue.skybluecontacts.R
+import com.skyblue.skybluecontacts.activity.AccountActivity
 import com.skyblue.skybluecontacts.activity.CloudContactsActivity
 import com.skyblue.skybluecontacts.activity.LoginActivity
 import com.skyblue.skybluecontacts.databinding.ActivitySettingsBinding
@@ -70,6 +71,13 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun onClick() {
+        binding.myAccount.setOnClickListener {
+            startActivity(Intent(context, AccountActivity::class.java))
+        }
+
+        binding.about.setOnClickListener {
+            startActivity(Intent(context, AboutActivity::class.java))
+        }
 
         binding.trash.setOnClickListener {
             startActivity(Intent(context, TrashActivity::class.java))

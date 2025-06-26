@@ -9,6 +9,8 @@ import com.skyblue.skybluecontacts.model.ContactsRoom
 
 @Dao
 interface ContactsRoomDao {
+    @Query("DELETE FROM contacts")
+    suspend fun clearRoomDatabase()
 
     @Query("DELETE FROM contacts WHERE contactId = :contactId")
     suspend fun deleteContactByContactId(contactId: Int)

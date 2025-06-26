@@ -1,6 +1,5 @@
 package com.skyblue.skybluecontacts.repository
 
-import androidx.lifecycle.LiveData
 import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.room.ContactsRoomDao
 
@@ -16,5 +15,9 @@ class ContactsRoomRepository(private val contactDao: ContactsRoomDao) {
     suspend fun deleteAllContacts() = contactDao.deleteAllContacts()
     suspend fun isContactsEmpty(): Boolean {
         return contactDao.getContactsCount() == 0
+    }
+
+    suspend fun clearRoomDatabase() {
+        contactDao.clearRoomDatabase()
     }
 }
