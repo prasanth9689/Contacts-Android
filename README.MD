@@ -7,7 +7,6 @@
 
 
 <table>
-## Screenshots
   <tr>
     <td><img src="https://github.com/prasanth9689/Skyblue-Contacts/blob/master/Screenshots/Screenshot_20250627_180549.png" width="150"/></td>
     <td><img src="https://github.com/prasanth9689/Skyblue-Contacts/blob/master/Screenshots/Screenshot_20250627_180629.png" width="150"/></td>
