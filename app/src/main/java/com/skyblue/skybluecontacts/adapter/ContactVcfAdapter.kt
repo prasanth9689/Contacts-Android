@@ -49,7 +49,7 @@ class ContactVcfAdapter(
 
         holder.container.setBackgroundColor(
             if (contact.isSelected)
-                ContextCompat.getColor(holder.itemView.context, R.color.primary)
+                ContextCompat.getColor(holder.itemView.context, R.color.selected_background_color)
             else
                 Color.TRANSPARENT
         )

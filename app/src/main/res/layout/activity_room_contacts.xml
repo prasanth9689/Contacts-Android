@@ -82,47 +82,6 @@
 
         </RelativeLayout>
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-                <include layout="@layout/item_list_shimmer" />
-            </LinearLayout>
-        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -146,7 +105,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="65dp"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/syncContactsProgressBarLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:progressDrawable="@drawable/progrress_custom"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sync contacts"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            />
 
     </LinearLayout>
 

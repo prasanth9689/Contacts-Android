@@ -1,6 +1,7 @@
 package com.skyblue.skybluecontacts
 
 import android.Manifest
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,6 +17,8 @@ import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -49,10 +52,12 @@ import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
 class RoomContactsActivity : BaseActivity() {
+    private lateinit var requestBody: RequestBody
     private lateinit var binding: ActivityRoomContactsBinding
     private val context = this
     val TAG = "RoomContacts_"
@@ -63,6 +68,7 @@ class RoomContactsActivity : BaseActivity() {
     private lateinit var adapterRoom: ContactsRoomAdapter
     private val REQUEST_CALL_PERMISSION = 1
     private var mPhoneNumber = ""
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +88,17 @@ class RoomContactsActivity : BaseActivity() {
             if (isEmpty) {
                 synchContacts()
                 Log.d(TAG, "No contacts found! in local room database \n Fetching contacts from server")
-                showMessage(getString(R.string.contacts_sync_please_wait))
+                // showMessage(getString(R.string.contacts_sync_please_wait))
             } else {
+//                lifecycleScope.launch {
+//                    viewModelRoom.contacts.collectLatest {
+//                        binding.recyclerView.adapter = adapterRoom
+//                    }
+//                }
+
+                binding.syncContactsProgressBarLayout.visibility = View.GONE
+                binding.noContactsLayout.visibility = View.GONE
+                binding.recyclerView.visibility = View.VISIBLE
                 Log.d(TAG, "Contacts are available. in local room database")
             }
         }
@@ -177,6 +192,7 @@ class RoomContactsActivity : BaseActivity() {
         viewModel.isdeleteContact.observe(this){
             if (it){
                 viewModelRoom.deleteContact(contactsRoom.contactId.toInt())
+                viewModelRoom.checkIfContactsEmpty()
             }else{
                 showMessage(getString(R.string.error_deleting_contact))
             }
@@ -241,19 +257,20 @@ class RoomContactsActivity : BaseActivity() {
         }
 
         val mediaType = "application/json; charset=utf-8".toMediaType()
-        val requestBody = jsonObject.toString().toRequestBody(mediaType)
+         requestBody = jsonObject.toString().toRequestBody(mediaType)
 
         viewModel.contacts.observe(this) { list ->
             Log.d(TAG, "Fetched items: $list")
 
             if (list.isNullOrEmpty()) {
-                showMessage(getString(R.string.no_contacts_found))
-                binding.shimmerLayout.visibility = View.GONE
-                binding.noContactsLayout.visibility = View.VISIBLE
+                // showMessage(getString(R.string.no_contacts_found))
+                binding.syncContactsProgressBarLayout.visibility = View.GONE
                 binding.recyclerView.visibility = View.GONE
+
+                binding.noContactsLayout.visibility = View.VISIBLE
             }else{
+                binding.syncContactsProgressBarLayout.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
-                binding.shimmerLayout.visibility = View.GONE
                 binding.noContactsLayout.visibility = View.GONE
 
                 val contactList = list.map {
@@ -320,6 +337,37 @@ class RoomContactsActivity : BaseActivity() {
         viewModelRoom.filteredItems.observe(this) { contacts ->
             adapterRoom.updateData(contacts)
         }
+
+
+        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data?.getStringExtra("onResume")
+                Log.e("Debug_", "Received: $data")
+
+                if (data == "refresh"){
+                  viewModelRoom.checkIfContactsEmpty()
+                    viewModelRoom.isEmpty.observe(this) { isEmpty ->
+                        if (!isEmpty) {
+                            Log.e("Debug_", "Room db: contacts available.")
+                            binding.syncContactsProgressBarLayout.visibility = View.GONE
+                            binding.recyclerView.visibility = View.VISIBLE
+                            binding.noContactsLayout.visibility = View.GONE
+                            Toast.makeText(this, "Refresh. not empty", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Log.e("Debug_", "Room db: empty")
+                        }
+                    }
+//                    Toast.makeText(this, "Received: $data", Toast.LENGTH_SHORT).show()
+                   // recreate()
+//                    viewModel.fetchContacts(requestBody)
+
+                    viewModelRoom.getAllContacts()
+                    adapterRoom.notifyDataSetChanged()
+
+
+                }
+            }
+        }
     }
 
     private fun openSearch(){
@@ -356,19 +404,19 @@ class RoomContactsActivity : BaseActivity() {
 
         binding.selectFrContact.setOnClickListener {
             val intent = Intent(context, AddContactsDeviceActivity::class.java)
-            startActivity(intent)
+            resultLauncher.launch(intent)
             dialog.dismiss()
         }
 
         binding.addManually.setOnClickListener {
             val intent = Intent(context, AddContactManuallyActivity::class.java)
-            startActivity(intent)
+            resultLauncher.launch(intent)
             dialog.dismiss()
         }
 
         binding.importVcf.setOnClickListener {
             val intent = Intent(context, ImportContactsVcfActivity::class.java)
-            startActivity(intent)
+            resultLauncher.launch(intent)
             dialog.dismiss()
         }
 
@@ -396,46 +444,48 @@ class RoomContactsActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModelRoom.isEmpty.observe(this) { isEmpty ->
-            if (isEmpty) {
-                showMessage("Sync started")
-
-                val jsonObject = JSONObject().apply {
-                    put("acc", "get_contacts")
-                    put("userId", user.userId)
-                }
-
-                val mediaType = "application/json; charset=utf-8".toMediaType()
-                val requestBody = jsonObject.toString().toRequestBody(mediaType)
-
-                viewModel.contacts.observe(this) { list ->
-                    Log.d(TAG, "Fetched items: $list")
-                    if (list.isNullOrEmpty()) {
-                        showMessage(getString(R.string.no_contacts_found))
-                    }else{
-                        val contactList = list.map {
-                            ContactsRoom(contactId = it.contactId, firstName = it.firstName, phoneNumber = it.phoneNumber)
-                        }
-                        viewModelRoom.deleteAllContacts()
-                        viewModelRoom.insertContact(contactList)
-                        viewModelRoom.getAllContacts()
-                        showMessage(getString(R.string.contacts_sync_success))
-                    }
-                }
-                viewModel.fetchContacts(requestBody)
-                Log.d(TAG, " onResume: No contacts found! in local room database \n Fetching contacts from server")
-                showMessage(getString(R.string.contacts_sync_please_wait))
-            } else {
-                lifecycleScope.launch {
-                    viewModelRoom.contacts.collectLatest {
-                        binding.recyclerView.adapter = adapterRoom
-                    }
-                }
-                viewModelRoom.getAllContacts()
-                Log.d(TAG, " onResume:  Contacts are available. in local room database")
-            }
-        }
+//        viewModelRoom.isEmpty.observe(this) { isEmpty ->
+//            if (isEmpty) {
+//                showMessage("Sync started")
+//
+//                val jsonObject = JSONObject().apply {
+//                    put("acc", "get_contacts")
+//                    put("userId", user.userId)
+//                }
+//
+//                val mediaType = "application/json; charset=utf-8".toMediaType()
+//                val requestBody = jsonObject.toString().toRequestBody(mediaType)
+//
+//                viewModel.contacts.observe(this) { list ->
+//                    Log.d(TAG, "Fetched items: $list")
+//                    if (list.isNullOrEmpty()) {
+//                        showMessage(getString(R.string.no_contacts_found))
+//                    }else{
+//                        val contactList = list.map {
+//                            ContactsRoom(contactId = it.contactId, firstName = it.firstName, phoneNumber = it.phoneNumber)
+//                        }
+//                        viewModelRoom.deleteAllContacts()
+//                        viewModelRoom.insertContact(contactList)
+//                        viewModelRoom.getAllContacts()
+//                        showMessage(getString(R.string.contacts_sync_success))
+//                    }
+//                }
+//                viewModel.fetchContacts(requestBody)
+//                Log.d(TAG, " onResume: No contacts found! in local room database \n Fetching contacts from server")
+//                showMessage(getString(R.string.contacts_sync_please_wait))
+//            } else {
+//                lifecycleScope.launch {
+//                    viewModelRoom.contacts.collectLatest {
+//                        binding.recyclerView.adapter = adapterRoom
+//                    }
+//                }
+//                viewModelRoom.getAllContacts()
+//                Log.d(TAG, " onResume:  Contacts are available. in local room database")
+//            }
+//        }
     }
+
+
 }
 
 

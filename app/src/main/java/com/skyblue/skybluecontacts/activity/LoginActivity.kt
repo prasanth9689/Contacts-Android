@@ -110,7 +110,6 @@ class LoginActivity : BaseActivity() {
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
-                    // Hide spinner and show WebView
                         binding.privacyPolicyProgressBar.visibility = View.GONE
                         binding.webView.visibility = View.VISIBLE
                         binding.agreePrivacyPolicyButton.visibility = View.VISIBLE
@@ -118,22 +117,6 @@ class LoginActivity : BaseActivity() {
             }
 
             binding.webView.loadUrl("https://contacts.skyblue.co.in/pages/privacy_policy.html")
-
-
-//            binding.webView.webChromeClient = object : WebChromeClient() {
-//                override fun onProgressChanged(view: WebView, newProgress: Int) {
-//                    title = "Loading... $newProgress%"
-//                    if (newProgress == 100) title = view.title
-//
-//                    if (newProgress == 100){
-//                        binding.progressBar.visibility = View.GONE
-//                        binding.webView.visibility = View.GONE
-//                        binding.agreePrivacyPolicyButton.visibility = View.VISIBLE
-//                    }
-//
-//                    binding.webView.loadUrl("https://contacts.skyblue.co.in/pages/privacy_policy.html")
-//                }
-//            }
         }
 
 
@@ -149,13 +132,11 @@ class LoginActivity : BaseActivity() {
 
             lifecycleScope.launch {
                 try {
-                    // Launch Credential Manager UI
                     val result = credentialManager.getCredential(
                         context = baseContext,
                         request = request
                     )
 
-                    // Extract credential from the result returned by Credential Manager
                     handleSignIn(result.credential)
                 } catch (e: GetCredentialException) {
                     Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
@@ -194,7 +175,6 @@ class LoginActivity : BaseActivity() {
                     val user = auth.currentUser
                     updateUI(user)
 
-                    showMessage(getString(R.string.google_sign_in_success))
                     binding.googleSignInLayout.visibility = View.GONE
                     binding.loginInitLayout.visibility = View.VISIBLE
                     loginNow(user?.uid.orEmpty(), user?.displayName.orEmpty(), user?.email.orEmpty())
@@ -247,7 +227,6 @@ class LoginActivity : BaseActivity() {
                                 intent.putExtra("displayName", displayName)
                                 startActivity(intent)
                                 finish()
-                            showMessage(login.message)
                         }
                     }else {
                         showMessage(getString(R.string.login_failed))
@@ -298,11 +277,4 @@ class LoginActivity : BaseActivity() {
             )
         }
     }
-
-//    override fun attachBaseContext(newBase: Context) {
-//        val lang = PreferenceHelper.getLanguage(newBase)
-//        val context = LocaleHelper.setLocale(newBase, lang)
-//        super.attachBaseContext(context)
-//    }
-
 }

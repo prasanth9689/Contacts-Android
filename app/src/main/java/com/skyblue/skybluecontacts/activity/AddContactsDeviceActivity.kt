@@ -16,6 +16,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -134,12 +136,24 @@ class AddContactsDeviceActivity : BaseActivity() {
         }
 
         binding.back.setOnClickListener{
+            val resultIntent = Intent()
+            resultIntent.putExtra("onResume", "refresh")
+            setResult(RESULT_OK, resultIntent)
             finish()
         }
 
         binding.checkAll.setOnClickListener {
             viewModelSel.toggleSelectAll()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val resultIntent = Intent()
+                resultIntent.putExtra("onResume", "refresh")
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
+        })
     }
 
     private fun disableSaveProgress() {
@@ -188,7 +202,7 @@ class AddContactsDeviceActivity : BaseActivity() {
                 disableSaveProgress()
                 showSuccess(getString(R.string.contacts_saved_success))
                 viewModelSel.deselectAll()
-                showMessage(getString(R.string.contacts_saved_success))
+               // showMessage(getString(R.string.contacts_saved_success))
             }
         }
         viewModel.fetchContacts(requestBody)

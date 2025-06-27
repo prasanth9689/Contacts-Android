@@ -103,7 +103,7 @@
     <string name="error_deleting_contact">Error delete contact!</string>
     <string name="deleted_success">Deleted success!</string>
     <string name="about">About</string>
-    <string name="skyblue_contacts">Skyblue contacts</string>
+    <string name="skyblue_contacts" translatable="false">Skyblue contacts</string>
     <string name="a_safe_type_contact_app">A safe type contact app</string>
     <string name="developer_message">To protect contacts from other apps. Highly secured end-to-end encryption technology was used. Cloud contacts are never stored in the mobile device\'s default contacts storage and SIM storage. Users can access contacts synced from the server can be accessible Offline. Easily access with premium features dark mode and light mode, with increase app font size. Stunning UI. Users can delete contacts permanently from cloud storage.</string>
     <string name="no_premium_purchases_and_no_ads">`No premium purchases. and No ads \n 100% Free`</string>

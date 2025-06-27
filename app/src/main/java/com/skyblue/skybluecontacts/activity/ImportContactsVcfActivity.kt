@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -158,6 +159,22 @@ class ImportContactsVcfActivity : BaseActivity() {
                 Log.d(TAG, "SelectedContact ${contact.name} - ${contact.phone}")
             }
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val resultIntent = Intent()
+                resultIntent.putExtra("onResume", "refresh")
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
+        })
+
+        binding.back.setOnClickListener {
+            val resultIntent = Intent()
+            resultIntent.putExtra("onResume", "refresh")
+            setResult(RESULT_OK, resultIntent)
+            finish()
+        }
     }
 
     private fun disableSaveProgress() {
@@ -206,7 +223,7 @@ class ImportContactsVcfActivity : BaseActivity() {
                 disableSaveProgress()
                 showSuccess(getString(R.string.contacts_saved_success))
                 contactViewModel.deselectAll()
-                showMessage(getString(R.string.contacts_saved_success))
+              //  showMessage(getString(R.string.contacts_saved_success))
             }
         }
         viewModel.fetchContacts(requestBody)

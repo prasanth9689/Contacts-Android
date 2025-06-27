@@ -1,10 +1,12 @@
 package com.skyblue.skybluecontacts.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -110,6 +112,22 @@ class AddContactManuallyActivity : BaseActivity() {
                 disableSaveProgress()
                 showError("Something went wrong. Please try again.")
             }
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val resultIntent = Intent()
+                resultIntent.putExtra("onResume", "refresh")
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
+        })
+
+        binding.back.setOnClickListener {
+            val resultIntent = Intent()
+            resultIntent.putExtra("onResume", "refresh")
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
     }
 
