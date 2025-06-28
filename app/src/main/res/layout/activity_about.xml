@@ -22,16 +22,25 @@
             android:paddingBottom="15dp"
             android:background="@color/backgroundColor">
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/back_button"
-                android:src="@drawable/btn_back"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:tint="@color/textColor" />
+                android:layout_marginStart="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/back_button"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/btn_back"
+                    app:tint="@color/textColor" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/title"
@@ -131,7 +140,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:background="?attr/selectableItemBackground"
             android:layout_marginEnd="10dp"

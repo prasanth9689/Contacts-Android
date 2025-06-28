@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.skyblue.skybluecontacts.activity.settings
 
 import android.app.Dialog
@@ -47,7 +49,7 @@ class SettingsActivity : BaseActivity() {
     lateinit var session: SessionHandler
     lateinit var user: User
     private val context = this
-    private val TAG = "Settings_"
+    private val tag = "Settings_"
     private var langDialog: Dialog? = null
     private var selectedLanguage = 0
     private val viewModel: ContactsViewModel by viewModels()
@@ -89,7 +91,7 @@ class SettingsActivity : BaseActivity() {
 
         binding.syncContacts.setOnClickListener {
             binding.syncProgress.visibility = View.VISIBLE
-            synchContacts()
+            syncContacts()
         }
 
         binding.back.setOnClickListener {
@@ -122,16 +124,16 @@ class SettingsActivity : BaseActivity() {
 
             googleSignInClient.signOut().addOnCompleteListener {
                 if (it.isSuccessful) {
-                    showMessage("Signed out successfully")
+                    showMessage(getString(R.string.signed_out_successfully))
 
                     val credentialManager = CredentialManager.create(context)
                     CoroutineScope(Dispatchers.Main).launch {
                         try {
                             session.logoutUser()
                             credentialManager.clearCredentialState(ClearCredentialStateRequest())
-                            Log.d(TAG, "Credential cleared!")
+                            Log.d(tag, "Credential cleared!")
                         } catch (e: Exception) {
-                            Log.d(TAG, "Credential clear failed: ${e.message}")
+                            Log.d(tag, "Credential clear failed: ${e.message}")
                         }
                     }
 
@@ -139,14 +141,14 @@ class SettingsActivity : BaseActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     context.startActivity(intent)
                 } else {
-                    Log.d(TAG, "Google sign-out failed!")
+                    Log.d(tag, "Google sign-out failed!")
                 }
             }
         }
     }
 
-     fun synchContacts() {
-        showMessage("Sync started")
+     private fun syncContacts() {
+        showMessage(getString(R.string.sync_started))
 
         val jsonObject = JSONObject().apply {
             put("acc", "get_contacts")
@@ -157,7 +159,7 @@ class SettingsActivity : BaseActivity() {
         val requestBody = jsonObject.toString().toRequestBody(mediaType)
 
         viewModel.contacts.observe(this) { list ->
-            Log.d(TAG, "Fetched items: $list")
+            Log.d(tag, "Fetched items: $list")
 
             if (list.isNullOrEmpty()) {
                 showMessage(getString(R.string.no_contacts_found))
@@ -234,7 +236,7 @@ class SettingsActivity : BaseActivity() {
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
-                    Log.d(TAG, "Selected english")
+                    Log.d(tag, "Selected english")
                 }
 
                 2 -> {
@@ -242,9 +244,21 @@ class SettingsActivity : BaseActivity() {
                     val intent = Intent(context, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
-                        Log.d(TAG, "Selected tamil")
+                        Log.d(tag, "Selected tamil")
                 }
             }
+        }
+
+        if (PreferenceHelper.getLanguage(context) == "en"){
+            selectedLanguage = 1
+            englishRadioBtn.isChecked = true
+
+            tamilRadioBtn.isChecked = false
+        } else {
+            selectedLanguage = 2
+            tamilRadioBtn.isChecked = true
+
+            englishRadioBtn.isChecked = false
         }
 
         cancelButton.setOnClickListener { langDialog!!.dismiss() }

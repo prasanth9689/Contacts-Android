@@ -52,7 +52,7 @@
                     android:layout_height="35dp"
                     android:contentDescription="@string/call"
                     android:src="@drawable/ic_call"
-                    app:tint="@color/textColor"
+                    app:tint="@color/primary"
                     android:layout_centerInParent="true"/>
 
             </RelativeLayout>
@@ -80,7 +80,7 @@
                     android:layout_height="35dp"
                     android:contentDescription="@string/message"
                     android:src="@drawable/ic_message"
-                    app:tint="@color/textColor"
+                    app:tint="@color/primary"
                     android:layout_centerInParent="true"/>
 
             </RelativeLayout>

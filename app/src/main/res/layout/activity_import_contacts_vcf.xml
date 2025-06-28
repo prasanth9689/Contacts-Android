@@ -86,12 +86,13 @@
                 android:textColor="@color/textColor"
                 android:textStyle="bold"
                 android:paddingTop="15dp"
-                android:paddingBottom="15dp"/>
+                android:paddingBottom="15dp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Selected"
+                android:text="@string/selected"
                 android:textSize="18sp"
                 android:textColor="@color/textColor"
                 android:layout_marginStart="10dp"
@@ -119,9 +120,9 @@
                     android:id="@+id/successText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/textColorError"
+                    android:textColor="@color/white"
                     android:paddingStart="20dp"
-                    android:text="Saved success"
+                    android:text="@string/saved_success"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:paddingEnd="0dp"/>
@@ -131,6 +132,7 @@
                     android:layout_height="25dp"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/select_all"
                     android:src="@drawable/ic_tick"
                     app:tint="@color/white" />
 
@@ -231,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:text="Save cloud now"
+                android:text="@string/save_cloud_now"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="5dp"
                 android:textSize="17sp"

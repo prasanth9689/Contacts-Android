@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.model.Contacts
@@ -30,11 +29,6 @@ class ContactAdapter(private var contacts: List<Contacts>) :
         val contact = contacts[position]
         holder.nameText.text = contact.firstName
         holder.phoneText.text = contact.phoneNumber
-
-        holder.itemView.setOnClickListener {
-            // Handle item click
-            Toast.makeText(holder.itemView.context, "Clicked on ${contact.firstName}", Toast.LENGTH_SHORT).show()
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

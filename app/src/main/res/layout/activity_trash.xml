@@ -38,7 +38,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/back"
             android:fontFamily="sans-serif-medium"
-            android:text="Trash"
+            android:text="@string/trash"
             android:textColor="@color/textColor"
             android:textSize="20sp"/>
 
@@ -106,12 +106,12 @@
             android:layout_centerInParent="true"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            tools:ignore="UselessParent">
+            tools:ignore="UseCompoundDrawables,UselessParent">
 
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:contentDescription="Empty trash!"
+                android:contentDescription="@string/empty_trash"
                 android:src="@drawable/ic_trash"
                 android:layout_gravity="center"/>
 
@@ -121,16 +121,8 @@
                 android:gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:textSize="17sp"
-                android:text="Empty trash!"/>
+                android:text="@string/empty_trash"/>
 
-<!--            <Button-->
-<!--                android:id="@+id/addContacts"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/btn_black"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:text="@string/add_contacts" />-->
         </LinearLayout>
 
     </RelativeLayout>
