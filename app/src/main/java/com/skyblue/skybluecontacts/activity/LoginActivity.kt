@@ -13,8 +13,12 @@ import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
@@ -50,6 +54,8 @@ class LoginActivity : BaseActivity() {
     lateinit var session: SessionHandler
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
+    private lateinit var googleSignInClient: GoogleSignInClient
+    val RC_SIGN_IN = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,26 +127,44 @@ class LoginActivity : BaseActivity() {
 
 
         binding.google.setOnClickListener {
-            val googleIdOption = GetGoogleIdOption.Builder()
-                .setServerClientId(getString(R.string.client_id))
-                .setFilterByAuthorizedAccounts(true)
-                .build()
+            val account = GoogleSignIn.getLastSignedInAccount(this)
 
-            val request = GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build()
+            if (account != null) {
+                openGoogleSignIn()
+                Log.d("GoogleSignIn", "Already signed in: ${account.email}")
+            } else {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build()
 
-            lifecycleScope.launch {
-                try {
-                    val result = credentialManager.getCredential(
-                        context = baseContext,
-                        request = request
-                    )
+                googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-                    handleSignIn(result.credential)
-                } catch (e: GetCredentialException) {
-                    Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
-                }
+                val signInIntent = googleSignInClient.signInIntent
+                startActivityForResult(signInIntent, RC_SIGN_IN)
+            }
+        }
+    }
+
+    private fun openGoogleSignIn() {
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setServerClientId(getString(R.string.client_id))
+            .setFilterByAuthorizedAccounts(true)
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        lifecycleScope.launch {
+            try {
+                val result = credentialManager.getCredential(
+                    context = baseContext,
+                    request = request
+                )
+
+                handleSignIn(result.credential)
+            } catch (e: GetCredentialException) {
+                Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
             }
         }
     }
@@ -277,4 +301,20 @@ class LoginActivity : BaseActivity() {
             )
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                openGoogleSignIn()
+                Log.d("GoogleSignIn", "Signed in successfully: ${account.email}")
+            } catch (e: ApiException) {
+                Log.e("GoogleSignIn", "Sign-in failed: ${e.statusCode}")
+            }
+        }
+    }
+
 }
