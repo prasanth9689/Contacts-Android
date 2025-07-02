@@ -11,27 +11,36 @@
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:elevation="5dp"
         android:background="@color/backgroundColor">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/my_account"
-            android:src="@drawable/btn_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
             android:foreground="?android:attr/selectableItemBackground"
-            app:tint="@color/textColor" />
+            android:layout_marginStart="0dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/back_button"
+                android:layout_centerInParent="true"
+                android:src="@drawable/btn_back"
+                app:tint="@color/textColor" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="-10dp"
             android:layout_toEndOf="@+id/back"
             android:fontFamily="sans-serif-medium"
             android:text="@string/my_account"

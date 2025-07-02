@@ -51,6 +51,10 @@ class AccountActivity : BaseActivity() {
         viewModelRoom = ViewModelProvider(this, ContactsRoomViewModelFactory(repository))[ContactsRoomViewModel::class.java]
 
         onClick()
+
+        binding.back.setOnClickListener {
+            finish()
+        }
     }
 
     fun onClick(){

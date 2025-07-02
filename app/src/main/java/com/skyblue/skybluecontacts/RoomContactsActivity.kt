@@ -75,6 +75,8 @@ class RoomContactsActivity : BaseActivity() {
         binding = ActivityRoomContactsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionHandler.init(applicationContext)
+
         session = SessionHandler
         user = session.getUserDetails()!!
 
@@ -137,6 +139,10 @@ class RoomContactsActivity : BaseActivity() {
 
                         if (it.action == "delete"){
                             initMoreDialog(it.view, it.contact)
+                        }
+
+                        if (it.action == "expand"){
+                            binding.recyclerView.smoothScrollToPosition(adapterRoom.itemCount - 1)
                         }
                     }
                 )

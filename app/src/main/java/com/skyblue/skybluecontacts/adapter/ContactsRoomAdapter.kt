@@ -24,8 +24,10 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
 
     override fun onBindViewHolder(holder: ContactViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.bind(contacts[position])
+        val contact = contacts[position]
 
          holder.itemView.setOnClickListener {
+
              // Temp solution for expand and close. again expand same item or id
              if (expandedPosition == selectedPosition){
                  holder.binding.optionsLayout.visibility = View.GONE
@@ -42,7 +44,14 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
                 }
-            }
+
+             if (position == contacts.size -1 ){
+                 val options = Options("expand",
+                     holder.itemView,
+                     contact = contact)
+                 onClick(options)
+             }
+         }
 
         if (position == selectedPosition) {
             holder.binding.optionsLayout.visibility = View.VISIBLE
@@ -50,7 +59,7 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
         } else {
             holder.binding.optionsLayout.visibility = View.GONE
         }
-        val contact = contacts[position]
+
         holder.binding.callNow.setOnClickListener {
 
             val options = Options("call",

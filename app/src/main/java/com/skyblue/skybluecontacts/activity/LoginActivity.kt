@@ -62,6 +62,8 @@ class LoginActivity : BaseActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionHandler.init(applicationContext)
+
         initTheme()
 
         auth = Firebase.auth
