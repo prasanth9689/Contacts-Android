@@ -14,8 +14,8 @@ android {
         applicationId = "com.skyblue.skybluecontacts"
         minSdk = 24
         targetSdk = 35
-        versionCode = 102
-        versionName = "102"
+        versionCode = 103
+        versionName = "103"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
