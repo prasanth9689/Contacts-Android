@@ -3,11 +3,15 @@ package com.skyblue.skybluecontacts.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
@@ -43,6 +47,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -57,10 +62,24 @@ class LoginActivity : BaseActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     val RC_SIGN_IN = 1001
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        try {
+            val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+            for (signature in info.signingInfo?.apkContentsSigners!!) {
+                val md = MessageDigest.getInstance("SHA1")
+                md.update(signature.toByteArray())
+                val sha1 = Base64.encodeToString(md.digest(), Base64.NO_WRAP)
+                Log.d("AppSHA1", sha1)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
 
         SessionHandler.init(applicationContext)
 

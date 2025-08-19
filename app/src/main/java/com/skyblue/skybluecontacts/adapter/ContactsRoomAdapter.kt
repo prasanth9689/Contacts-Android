@@ -113,6 +113,14 @@ class ContactsRoomAdapter(private var contacts: MutableList<ContactsRoom>,
         newList.remove(contact)
         updateList(newList)
     }
+
+    fun updateItem(updatedContact: ContactsRoom) {
+        val index = contacts.indexOfFirst { it.id == updatedContact.id }
+        if (index != -1) {
+            contacts[index] = updatedContact
+            notifyItemChanged(index)
+        }
+    }
 }
 
 class ContactViewHolder(val binding: ItemContactBinding) :

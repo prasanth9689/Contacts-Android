@@ -145,4 +145,10 @@
     <string name="sync_started">Sync started</string>
     <string name="select_all">Select all</string>
     <string name="saved_success">Saved success</string>
+    <string name="export">Export</string>
+    <string name="export_vcf_file">Export .VCF file</string>
+    <string name="exporting_contacts_please_wait">Exporting contacts. Please wait...</string>
+    <string name="rename">Rename</string>
+    <string name="rename_contact">Rename contact</string>
+    <string name="enter_name">Enter name</string>
 </resources>

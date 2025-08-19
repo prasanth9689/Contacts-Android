@@ -2,25 +2,29 @@ package com.skyblue.skybluecontacts
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
@@ -42,6 +46,7 @@ import com.skyblue.skybluecontacts.databinding.ActivityRoomContactsBinding
 import com.skyblue.skybluecontacts.databinding.BottomSheetAddContactBinding
 import com.skyblue.skybluecontacts.model.ContactsRoom
 import com.skyblue.skybluecontacts.model.DeleteSingleCloud
+import com.skyblue.skybluecontacts.model.RenameCloudContact
 import com.skyblue.skybluecontacts.model.User
 import com.skyblue.skybluecontacts.repository.ContactsRoomRepository
 import com.skyblue.skybluecontacts.room.AppDatabase
@@ -49,18 +54,26 @@ import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.util.showMessage
 import com.skyblue.skybluecontacts.viewmodel.ContactsRoomViewModel
 import com.skyblue.skybluecontacts.viewmodel.ContactsViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.Objects
 
 class RoomContactsActivity : BaseActivity() {
     private lateinit var requestBody: RequestBody
     private lateinit var binding: ActivityRoomContactsBinding
     private val context = this
-    val TAG = "RoomContacts_"
+    val TAG = "CloudContacts_"
     private val viewModel: ContactsViewModel by viewModels()
     lateinit var session: SessionHandler
     lateinit var user: User
@@ -69,6 +82,9 @@ class RoomContactsActivity : BaseActivity() {
     private val REQUEST_CALL_PERMISSION = 1
     private var mPhoneNumber = ""
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private var contactsExportDialog: Dialog? = null
+    private var renameContactDialog: Dialog? = null
+    private var bottomSheetDialog: BottomSheetDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +92,7 @@ class RoomContactsActivity : BaseActivity() {
         setContentView(binding.root)
 
         SessionHandler.init(applicationContext)
+        initContactsExportDialog()
 
         session = SessionHandler
         user = session.getUserDetails()!!
@@ -84,20 +101,11 @@ class RoomContactsActivity : BaseActivity() {
         val repository = ContactsRoomRepository(contactDao)
         viewModelRoom = ViewModelProvider(this, ContactsRoomViewModelFactory(repository))[ContactsRoomViewModel::class.java]
 
-       // viewModelRoom.deleteAllContacts()
-
         viewModelRoom.isEmpty.observe(this) { isEmpty ->
             if (isEmpty) {
                 synchContacts()
                 Log.d(TAG, "No contacts found! in local room database \n Fetching contacts from server")
-                // showMessage(getString(R.string.contacts_sync_please_wait))
             } else {
-//                lifecycleScope.launch {
-//                    viewModelRoom.contacts.collectLatest {
-//                        binding.recyclerView.adapter = adapterRoom
-//                    }
-//                }
-
                 binding.syncContactsProgressBarLayout.visibility = View.GONE
                 binding.noContactsLayout.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
@@ -160,6 +168,15 @@ class RoomContactsActivity : BaseActivity() {
         searchEditText.setHintTextColor(ContextCompat.getColor(context, R.color.textHintColor))
     }
 
+    private fun initContactsExportDialog() {
+        contactsExportDialog = Dialog(context)
+        contactsExportDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        contactsExportDialog!!.setContentView(R.layout.item_export_progress)
+        Objects.requireNonNull(contactsExportDialog!!.window)
+            ?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        contactsExportDialog!!.setCancelable(false)
+    }
+
     private fun initMoreDialog(anchorView: View, contactsRoom: ContactsRoom) {
         val popupView = LayoutInflater.from(context).inflate(R.layout.item_select_more_options, null)
 
@@ -167,7 +184,7 @@ class RoomContactsActivity : BaseActivity() {
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            true // Focusable
+            true
         )
 
         popupWindow.setBackgroundDrawable(Color.WHITE.toDrawable())
@@ -177,17 +194,80 @@ class RoomContactsActivity : BaseActivity() {
             adapterRoom.removeItem(contactsRoom)
             showMessage(getString(R.string.deleted_success))
             deleteSingleContact(contactsRoom)
-           // Toast.makeText(context, "Delete clicked ${contactsRoom.contactId}", Toast.LENGTH_SHORT).show()
             popupWindow.dismiss()
         }
 
-        popupView.findViewById<RelativeLayout>(R.id.select).setOnClickListener {
-            //Toast.makeText(context, "Edit clicked", Toast.LENGTH_SHORT).show()
-            // startActivity(Intent(context, MultipleSelectionActivity::class.java))
+        popupView.findViewById<RelativeLayout>(R.id.rename).setOnClickListener {
+            renameContact(contactsRoom)
             popupWindow.dismiss()
         }
+        popupWindow.showAsDropDown(anchorView, 100, 0)
+    }
 
-        popupWindow.showAsDropDown(anchorView, 100, 0) // You can offset with x/y if needed
+    private fun renameContact(contactsRoom: ContactsRoom) {
+
+        renameContactDialog = Dialog(context)
+        renameContactDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        renameContactDialog!!.setContentView(R.layout.item_contact_rename)
+        Objects.requireNonNull(renameContactDialog!!.window)
+            ?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        renameContactDialog!!.setCancelable(true)
+
+        renameContactDialog!!.show()
+
+        val editText = renameContactDialog!!.findViewById<EditText>(R.id.editText)
+        val saveBtn = renameContactDialog!!.findViewById<Button>(R.id.save)
+        val closeBtn = renameContactDialog!!.findViewById<RelativeLayout>(R.id.close)
+
+        editText.isEnabled = true
+        saveBtn.isEnabled = true
+        closeBtn.isEnabled = true
+
+        editText.setText(contactsRoom.firstName)
+
+        closeBtn.setOnClickListener {
+            renameContactDialog!!.dismiss()
+        }
+
+        saveBtn.setOnClickListener {
+            val name = editText.text.toString().trim()
+
+            if (!name.equals("")){
+
+                renameContactDialog!!.dismiss()
+                viewModelRoom.renameContact(contactsRoom.contactId.toInt(),
+                    name)
+
+                val contactsRoom2 = ContactsRoom(
+                    contactsRoom.id,
+                    contactsRoom.contactId,
+                    name,
+                    contactsRoom.phoneNumber
+                )
+
+                adapterRoom.updateItem(contactsRoom2)
+
+                val renameCloudContact = RenameCloudContact("rename_contact",
+                    user.userId.toString(),
+                    contactsRoom.contactId,
+                    name)
+
+                viewModel.isRenameContact.observe(this){
+                    if (it){
+                        Log.i(TAG, "Rename success!")
+                        viewModelRoom.renameContact(contactsRoom.contactId.toInt(),
+                            name)
+                    }else{
+                        Log.i(TAG, "Rename failure!")
+                    }
+                }
+
+                viewModel.renameContact(renameCloudContact)
+                return@setOnClickListener
+            }
+
+            Toast.makeText(context, "Please enter name.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun deleteSingleContact(contactsRoom: ContactsRoom) {
@@ -205,20 +285,6 @@ class RoomContactsActivity : BaseActivity() {
         }
 
         viewModel.deleteCloudContact(deleteSingleCloud)
-    }
-
-    private fun showOptionsDialog(firstName: String, phoneNumber: String) {
-        AlertDialog.Builder(context)
-            .setTitle("Contact Options")
-            .setMessage("What would you like to do with ${firstName}?")
-            .setPositiveButton("Delete") { _, _ ->
-                // Handle delete action
-                Toast.makeText(context, "${firstName} deleted", Toast.LENGTH_SHORT).show()
-
-
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 
     private fun openWhatsAppChat(phoneNumber: String) {
@@ -248,11 +314,9 @@ class RoomContactsActivity : BaseActivity() {
 
     private fun nowCallStart(phone: String) {
         val phoneNumber = "tel:$phone"
-
         val callIntent = Intent(Intent.ACTION_CALL).apply {
             data = phoneNumber.toUri()
         }
-
         startActivity(callIntent)
     }
 
@@ -263,16 +327,13 @@ class RoomContactsActivity : BaseActivity() {
         }
 
         val mediaType = "application/json; charset=utf-8".toMediaType()
-         requestBody = jsonObject.toString().toRequestBody(mediaType)
+        requestBody = jsonObject.toString().toRequestBody(mediaType)
 
         viewModel.contacts.observe(this) { list ->
             Log.d(TAG, "Fetched items: $list")
-
             if (list.isNullOrEmpty()) {
-                // showMessage(getString(R.string.no_contacts_found))
                 binding.syncContactsProgressBarLayout.visibility = View.GONE
                 binding.recyclerView.visibility = View.GONE
-
                 binding.noContactsLayout.visibility = View.VISIBLE
             }else{
                 binding.syncContactsProgressBarLayout.visibility = View.GONE
@@ -321,10 +382,8 @@ class RoomContactsActivity : BaseActivity() {
             val keypadHeight = screenHeight - rect.bottom
 
             if (keypadHeight > screenHeight * 0.15) {
-                // Keyboard is open
                 binding.bottomNav.visibility = View.GONE
             } else {
-                // Keyboard is closed
                 binding.bottomNav.visibility = View.VISIBLE
             }
         }
@@ -344,33 +403,25 @@ class RoomContactsActivity : BaseActivity() {
             adapterRoom.updateData(contacts)
         }
 
-
         resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data?.getStringExtra("onResume")
                 Log.e("Debug_", "Received: $data")
 
                 if (data == "refresh"){
-                  viewModelRoom.checkIfContactsEmpty()
+                    viewModelRoom.checkIfContactsEmpty()
                     viewModelRoom.isEmpty.observe(this) { isEmpty ->
                         if (!isEmpty) {
                             Log.e("Debug_", "Room db: contacts available.")
                             binding.syncContactsProgressBarLayout.visibility = View.GONE
                             binding.recyclerView.visibility = View.VISIBLE
                             binding.noContactsLayout.visibility = View.GONE
-                            Toast.makeText(this, "Refresh. not empty", Toast.LENGTH_SHORT).show()
                         }else{
                             Log.e("Debug_", "Room db: empty")
                         }
                     }
-//                    Toast.makeText(this, "Received: $data", Toast.LENGTH_SHORT).show()
-                   // recreate()
-//                    viewModel.fetchContacts(requestBody)
-
                     viewModelRoom.getAllContacts()
                     adapterRoom.notifyDataSetChanged()
-
-
                 }
             }
         }
@@ -400,34 +451,77 @@ class RoomContactsActivity : BaseActivity() {
     }
 
     private fun loadBottomSheetDialog() {
-        val dialog = BottomSheetDialog(context)
+        bottomSheetDialog = BottomSheetDialog(context)
         val binding = BottomSheetAddContactBinding.inflate(layoutInflater)
         val view = binding.root
 
-        dialog.setOnDismissListener {
+        bottomSheetDialog?.setOnDismissListener {
             Log.d("BottomSheet", "Closed or Collapsed")
         }
 
         binding.selectFrContact.setOnClickListener {
             val intent = Intent(context, AddContactsDeviceActivity::class.java)
             resultLauncher.launch(intent)
-            dialog.dismiss()
+            bottomSheetDialog?.dismiss()
         }
 
         binding.addManually.setOnClickListener {
             val intent = Intent(context, AddContactManuallyActivity::class.java)
             resultLauncher.launch(intent)
-            dialog.dismiss()
+            bottomSheetDialog?.dismiss()
         }
 
         binding.importVcf.setOnClickListener {
             val intent = Intent(context, ImportContactsVcfActivity::class.java)
             resultLauncher.launch(intent)
-            dialog.dismiss()
+            bottomSheetDialog?.dismiss()
         }
 
-        dialog.setContentView(view)
-        dialog.show()
+            binding.exportVcf.setOnClickListener {
+                bottomSheetDialog?.dismiss()
+                contactsExportDialog!!.show()
+                lifecycleScope.launch {
+                    val contactsRoom = withContext(Dispatchers.IO) {
+                        viewModelRoom.getAllContacts2()
+                    }
+                    val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                    val fileName = "contacts_export_$timestamp.vcf"
+                    val file = File(downloadsDir, fileName)
+                    val success = exportContactsToVcf(contactsRoom, file)
+
+                    if (success) {
+                        contactsExportDialog!!.dismiss()
+                        Log.e(TAG, "VCF saved to: ${file.absolutePath}")
+                        Toast.makeText(context, "VCF saved to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+                    } else {
+                        contactsExportDialog!!.dismiss()
+                        Log.e(TAG, "Export failed")
+                        Toast.makeText(context, "Export failed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+        bottomSheetDialog?.setContentView(view)
+        bottomSheetDialog?.show()
+    }
+
+    fun exportContactsToVcf(contacts: List<ContactsRoom>, file: File): Boolean {
+        return try {
+            val outputStream = FileOutputStream(file)
+            for (contact in contacts) {
+                val vcard = "BEGIN:VCARD\n" +
+                        "VERSION:3.0\n" +
+                        "FN:${contact.firstName}\n" +
+                        "TEL:${contact.phoneNumber}\n" +
+                        "END:VCARD\n"
+                outputStream.write(vcard.toByteArray())
+            }
+            outputStream.close()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -442,7 +536,6 @@ class RoomContactsActivity : BaseActivity() {
         ) {
             showMessage(getString(R.string.permission_granted))
             nowCallStart(mPhoneNumber)
-            // Permission granted — retry the call or notify user
         } else {
             showMessage(getString(R.string.call_permission_denied))
         }
@@ -450,48 +543,7 @@ class RoomContactsActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-//        viewModelRoom.isEmpty.observe(this) { isEmpty ->
-//            if (isEmpty) {
-//                showMessage("Sync started")
-//
-//                val jsonObject = JSONObject().apply {
-//                    put("acc", "get_contacts")
-//                    put("userId", user.userId)
-//                }
-//
-//                val mediaType = "application/json; charset=utf-8".toMediaType()
-//                val requestBody = jsonObject.toString().toRequestBody(mediaType)
-//
-//                viewModel.contacts.observe(this) { list ->
-//                    Log.d(TAG, "Fetched items: $list")
-//                    if (list.isNullOrEmpty()) {
-//                        showMessage(getString(R.string.no_contacts_found))
-//                    }else{
-//                        val contactList = list.map {
-//                            ContactsRoom(contactId = it.contactId, firstName = it.firstName, phoneNumber = it.phoneNumber)
-//                        }
-//                        viewModelRoom.deleteAllContacts()
-//                        viewModelRoom.insertContact(contactList)
-//                        viewModelRoom.getAllContacts()
-//                        showMessage(getString(R.string.contacts_sync_success))
-//                    }
-//                }
-//                viewModel.fetchContacts(requestBody)
-//                Log.d(TAG, " onResume: No contacts found! in local room database \n Fetching contacts from server")
-//                showMessage(getString(R.string.contacts_sync_please_wait))
-//            } else {
-//                lifecycleScope.launch {
-//                    viewModelRoom.contacts.collectLatest {
-//                        binding.recyclerView.adapter = adapterRoom
-//                    }
-//                }
-//                viewModelRoom.getAllContacts()
-//                Log.d(TAG, " onResume:  Contacts are available. in local room database")
-//            }
-//        }
     }
-
-
 }
 
 

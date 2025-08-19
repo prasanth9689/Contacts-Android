@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skyblue.skybluecontacts.model.Contacts
 import com.skyblue.skybluecontacts.model.DeleteSingleCloud
+import com.skyblue.skybluecontacts.model.RenameCloudContact
 import com.skyblue.skybluecontacts.repository.ContactsRepository
 import kotlinx.coroutines.launch
 import okhttp3.RequestBody
@@ -21,6 +22,9 @@ class ContactsViewModel : ViewModel(){
 
     private val _deleteContact = MutableLiveData<Boolean>()
     val isdeleteContact: LiveData<Boolean> = _deleteContact
+
+    private val _renameContact = MutableLiveData<Boolean>()
+    val isRenameContact: LiveData<Boolean> = _renameContact
 
     fun fetchContacts(requestBody: RequestBody){
         viewModelScope.launch {
@@ -66,6 +70,21 @@ class ContactsViewModel : ViewModel(){
                 }
             } catch (e: Exception){
                 Log.e(TAG, "error: " + e.message.toString())
+            }
+        }
+    }
+
+    fun renameContact(renameCloudContact: RenameCloudContact){
+        viewModelScope.launch {
+            try {
+                val response = repository.renameCloudContact(renameCloudContact)
+                if(response.status == "true"){
+                    _renameContact.value = true
+                } else{
+                    _renameContact.value = false
+                }
+            } catch (e: Exception){
+                Log.e(TAG, "Error! while rename. try again.")
             }
         }
     }

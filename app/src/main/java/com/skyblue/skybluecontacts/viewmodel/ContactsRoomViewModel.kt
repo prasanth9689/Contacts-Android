@@ -28,6 +28,10 @@ class ContactsRoomViewModel(private val repository: ContactsRoomRepository) : Vi
         _contacts.value = repository.getAllContacts()
     }
 
+    suspend fun getAllContacts2(): List<ContactsRoom> {
+        return repository.getAllContacts()
+    }
+
     fun deleteAllContacts() {
         viewModelScope.launch {
             repository.deleteAllContacts()
@@ -56,6 +60,12 @@ class ContactsRoomViewModel(private val repository: ContactsRoomRepository) : Vi
     fun deleteContact(contactId: Int) {
         viewModelScope.launch {
             repository.deleteContactByContactId(contactId)
+        }
+    }
+
+    fun renameContact(contactId: Int, firstName: String){
+        viewModelScope.launch {
+            repository.renameContact(contactId, firstName)
         }
     }
 

@@ -12,6 +12,9 @@ interface ContactsRoomDao {
     @Query("DELETE FROM contacts")
     suspend fun clearRoomDatabase()
 
+    @Query("UPDATE contacts SET firstName = :firstName  WHERE contactId = :contactId")
+    suspend fun renameContactByContactId(contactId: Int, firstName: String)
+
     @Query("DELETE FROM contacts WHERE contactId = :contactId")
     suspend fun deleteContactByContactId(contactId: Int)
 

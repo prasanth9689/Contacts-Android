@@ -9,6 +9,8 @@ import com.skyblue.skybluecontacts.model.DeleteSingleCloudResponse
 import com.skyblue.skybluecontacts.model.DeleteTrashCloud
 import com.skyblue.skybluecontacts.model.DeleteTrashCloudResponse
 import com.skyblue.skybluecontacts.model.Login
+import com.skyblue.skybluecontacts.model.RenameCloudContact
+import com.skyblue.skybluecontacts.model.RenameResponse
 import com.skyblue.skybluecontacts.model.SaveResponse
 import com.skyblue.skybluecontacts.model.TrashRequest
 import com.skyblue.skybluecontacts.model.TrashResponse
@@ -21,6 +23,10 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface APIInterface {
+
+    @POST("contacts.php")
+    suspend fun renameContact(@Body renameContact: RenameCloudContact): RenameResponse
+
     @POST("contacts.php")
     suspend fun deleteAccount(@Body deleteAccount: DeleteAccount): DeleteAccountResponse
 

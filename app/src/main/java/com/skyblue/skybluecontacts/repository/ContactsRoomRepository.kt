@@ -5,9 +5,13 @@ import com.skyblue.skybluecontacts.room.ContactsRoomDao
 
 class ContactsRoomRepository(private val contactDao: ContactsRoomDao) {
 
-        suspend fun deleteContactByContactId(contactId: Int) {
-            contactDao.deleteContactByContactId(contactId)
-        }
+    suspend fun renameContact(contactId: Int, firstName: String){
+        contactDao.renameContactByContactId(contactId, firstName)
+    }
+
+    suspend fun deleteContactByContactId(contactId: Int) {
+        contactDao.deleteContactByContactId(contactId)
+    }
 
     suspend fun insertContact(contact: List<ContactsRoom>) = contactDao.insertContact(contact)
     suspend fun getAllContacts() = contactDao.getAllContacts()

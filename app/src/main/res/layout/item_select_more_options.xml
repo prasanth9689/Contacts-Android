@@ -30,10 +30,10 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/select"
+            android:id="@+id/rename"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
            android:background="@drawable/bt_click_effect">
 
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_centerVertical="true"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="@string/select"
+                android:text="@string/rename"
                 android:fontFamily="sans-serif"
                 android:textSize="18sp"
                 android:textColor="@color/textColor"/>
