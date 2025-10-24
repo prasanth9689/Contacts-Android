@@ -80,9 +80,6 @@ class LoginActivity : BaseActivity() {
             e.printStackTrace()
         }
 
-
-        SessionHandler.init(applicationContext)
-
         initTheme()
 
         auth = Firebase.auth
