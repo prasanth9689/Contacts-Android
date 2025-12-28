@@ -1,6 +1,11 @@
 package com.skyblue.skybluecontacts.activity
 
-import android.annotation.SuppressLint
+// LoginActivity.kt
+// Modern implementation using Google One-Tap (Identity.getSignInClient) + CredentialManager fallback
+// Firebase authentication with Google ID token
+
+import android.app.Activity
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,26 +16,27 @@ import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInCredential
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.ktx.auth
 import com.skyblue.skybluecontacts.BaseActivity
 import com.skyblue.skybluecontacts.R
 import com.skyblue.skybluecontacts.RoomContactsActivity
@@ -41,6 +47,7 @@ import com.skyblue.skybluecontacts.session.SessionHandler
 import com.skyblue.skybluecontacts.util.AppConstants.SHARED_PREF
 import com.skyblue.skybluecontacts.util.showMessage
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
@@ -51,16 +58,62 @@ import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.collections.getOrNull
 
 class LoginActivity : BaseActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private var context: Context = this@LoginActivity
-    private val TAG = "GoogleSignIn_"
-    lateinit var session: SessionHandler
+    private lateinit var session: SessionHandler
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
-    private lateinit var googleSignInClient: GoogleSignInClient
-    val RC_SIGN_IN = 1001
+
+    // IMPORTANT: replace this with your WEB_CLIENT_ID (not Android client id)
+    // Example: "1234567890-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com"
+    // Put it in strings.xml as <string name="web_client_id">...</string>
+    private val WEB_CLIENT_ID by lazy { getString(R.string.client_id) }
+
+    private val TAG = "LoginActivity"
+
+    // One-tap request objects
+    private val oneTapRequest by lazy {
+        BeginSignInRequest.builder()
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setServerClientId(WEB_CLIENT_ID)
+                    .setFilterByAuthorizedAccounts(false) // show account chooser; set true to filter
+                    .build()
+            )
+            .setAutoSelectEnabled(false)
+            .build()
+    }
+
+    // ActivityResultLauncher to handle the One-Tap IntentSender result
+    private val oneTapLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            try {
+                val data = result.data
+                if (data != null) {
+                    // Identity.getSignInClient(this).getSignInCredentialFromIntent(data) can extract the token
+                    val credential: SignInCredential = Identity.getSignInClient(this)
+                        .getSignInCredentialFromIntent(data)
+                    val idToken = credential.googleIdToken
+                    if (!idToken.isNullOrEmpty()) {
+                        // Got ID token — authenticate with Firebase
+                        firebaseAuthWithGoogle(idToken)
+                    } else {
+                        Log.e(TAG, "No ID token in One-Tap credential")
+                        showMessage(getString(R.string.google_sign_in_failed, "No id token"))
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "One-tap result processing failed", e)
+            }
+        } else {
+            Log.e(TAG, "One-tap canceled or failed, resultCode=${result.resultCode}")
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,38 +121,42 @@ class LoginActivity : BaseActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        // Clipboard: only use when Activity is foreground
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        // Log app SHA1 (optional)
         try {
             val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            for (signature in info.signingInfo?.apkContentsSigners!!) {
+            for (signature in info.signingInfo?.apkContentsSigners ?: emptyArray()) {
                 val md = MessageDigest.getInstance("SHA1")
                 md.update(signature.toByteArray())
                 val sha1 = Base64.encodeToString(md.digest(), Base64.NO_WRAP)
                 Log.d("AppSHA1", sha1)
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Failed to calculate SHA1", e)
         }
 
+        SessionHandler.init(applicationContext)
         initTheme()
 
         auth = Firebase.auth
-        credentialManager = CredentialManager.create(baseContext)
+        credentialManager = CredentialManager.create(this)
 
         session = SessionHandler
         session.init(this)
 
-        if(session.isLoggedIn()){
-            val intent = Intent(context, RoomContactsActivity::class.java)
-            startActivity(intent)
+        if (session.isLoggedIn()) {
+            startActivity(Intent(this, RoomContactsActivity::class.java))
             finish()
         }
 
         onClick()
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @Suppress("DEPRECATION")
     private fun onClick() {
-
         binding.appPermissionButton.setOnClickListener {
             binding.appPermissionsLayout.visibility = View.GONE
             binding.googleSignInLayout.visibility = View.VISIBLE
@@ -117,16 +174,6 @@ class LoginActivity : BaseActivity() {
             binding.webView.settings.javaScriptEnabled = true
 
             binding.webView.webViewClient = object : WebViewClient() {
-                @Deprecated("Deprecated in Java")
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    view.loadUrl(url)
-                    return true
-                }
-            }
-
-
-            binding.webView.webViewClient = object : WebViewClient() {
-                @Deprecated("Deprecated in Java")
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                     view.loadUrl(url)
                     return true
@@ -134,38 +181,55 @@ class LoginActivity : BaseActivity() {
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
-                        binding.privacyPolicyProgressBar.visibility = View.GONE
-                        binding.webView.visibility = View.VISIBLE
-                        binding.agreePrivacyPolicyButton.visibility = View.VISIBLE
+                    binding.privacyPolicyProgressBar.visibility = View.GONE
+                    binding.webView.visibility = View.VISIBLE
+                    binding.agreePrivacyPolicyButton.visibility = View.VISIBLE
                 }
             }
 
             binding.webView.loadUrl("https://contacts.skyblue.co.in/pages/privacy_policy.html")
         }
 
-
+        // -- GOOGLE ONE-TAP CLICK --
         binding.google.setOnClickListener {
-            val account = GoogleSignIn.getLastSignedInAccount(this)
+            startOneTapSignIn()
 
-            if (account != null) {
-                openGoogleSignIn()
-                Log.d("GoogleSignIn", "Already signed in: ${account.email}")
-            } else {
-                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .build()
-
-                googleSignInClient = GoogleSignIn.getClient(this, gso)
-
-                val signInIntent = googleSignInClient.signInIntent
-                startActivityForResult(signInIntent, RC_SIGN_IN)
-            }
+            // Demo
+//            session.loginUser("30", "Prasanth")
+//            val intent = Intent(this@LoginActivity, RoomContactsActivity::class.java)
+//            intent.putExtra("userId", "30")
+//            intent.putExtra("displayName", "Prasanth")
+//            startActivity(intent)
+//            finish()
         }
     }
 
-    private fun openGoogleSignIn() {
+    private fun startOneTapSignIn() {
+        // Try One-Tap first
+        Identity.getSignInClient(this)
+            .beginSignIn(oneTapRequest)
+            .addOnSuccessListener { result ->
+                try {
+                    val intentSender = result.pendingIntent.intentSender
+                    val request = IntentSenderRequest.Builder(intentSender).build()
+                    oneTapLauncher.launch(request)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to launch One-Tap intent", e)
+                    // Fallback to Credential Manager / GetCredential
+                    fallbackToCredentialManager()
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "One-Tap beginSignIn failed: ${e.localizedMessage}")
+                // fallback
+                fallbackToCredentialManager()
+            }
+    }
+
+    private fun fallbackToCredentialManager() {
+        // Use CredentialManager to request authorized accounts (filterByAuthorizedAccounts=true)
         val googleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(getString(R.string.client_id))
+            .setServerClientId(WEB_CLIENT_ID)
             .setFilterByAuthorizedAccounts(true)
             .build()
 
@@ -175,40 +239,39 @@ class LoginActivity : BaseActivity() {
 
         lifecycleScope.launch {
             try {
+                // IMPORTANT: pass an Activity context (this@LoginActivity) so selector UI can show
                 val result = credentialManager.getCredential(
-                    context = baseContext,
+                    context = this@LoginActivity,
                     request = request
                 )
 
-                handleSignIn(result.credential)
+                handleCredential(result.credential)
             } catch (e: GetCredentialException) {
-                Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
+                Log.e(TAG, "CredentialManager getCredential failed: ${e.localizedMessage}")
+                // last resort - show message
+                showMessage(getString(R.string.google_sign_in_failed, e.localizedMessage ?: ""))
             }
         }
     }
 
-    private fun updateUI(user: FirebaseUser?) {
-        Log.e("GoogleSignIn_", "User: ${user.toString()}")
-        Log.e("GoogleSignIn_", "DisplayName: ${user?.displayName}")
-        Log.e("GoogleSignIn_", "Email: ${user?.email}")
-        Log.e("GoogleSignIn_", "UID: ${user?.uid}")
-        Log.e("GoogleSignIn_", "PhotoURL: ${user?.photoUrl}")
-    }
-
-    private fun handleSignIn(credential: Credential) {
+    private fun handleCredential(credential: Credential) {
         if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-
-            // Sign in to Firebase with using the token
-            Log.e(TAG, "Google ID Token: ${googleIdTokenCredential.idToken}")
-            firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+            val idToken = googleIdTokenCredential.idToken
+            if (!idToken.isNullOrBlank()) {
+                firebaseAuthWithGoogle(idToken)
+            } else {
+                Log.e(TAG, "Credential contained empty idToken")
+                showMessage(getString(R.string.google_sign_in_failed, "Empty id token"))
+            }
         } else {
-            Log.w(TAG, "Credential is not of type Google ID!")
+            Log.w(TAG, "Credential is not a Google ID token credential")
+            showMessage(getString(R.string.google_sign_in_failed, "Invalid credential type"))
         }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
-        Log.e(TAG, "Started Firebase Auth With Google: $idToken")
+        Log.d(TAG, "Firebase auth with Google ID token starting")
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -219,22 +282,24 @@ class LoginActivity : BaseActivity() {
 
                     binding.googleSignInLayout.visibility = View.GONE
                     binding.loginInitLayout.visibility = View.VISIBLE
+
                     loginNow(user?.uid.orEmpty(), user?.displayName.orEmpty(), user?.email.orEmpty())
                 } else {
                     Log.e(TAG, "signInWithCredential:failure", task.exception)
                     updateUI(null)
-                    showMessage(
-                        getString(
-                            R.string.google_sign_in_failed,
-                            task.exception?.localizedMessage
-                        ))
+                    showMessage(getString(R.string.google_sign_in_failed, task.exception?.localizedMessage))
                 }
             }
     }
 
-    data class UserResponse(
-        val userId: String
-    )
+    private fun updateUI(user: FirebaseUser?) {
+        Log.d(TAG, "User: ${user?.uid}")
+        Log.d(TAG, "DisplayName: ${user?.displayName}")
+        Log.d(TAG, "Email: ${user?.email}")
+        Log.d(TAG, "PhotoURL: ${user?.photoUrl}")
+    }
+
+    data class UserResponse( val userId: String )
 
     private fun loginNow(googleId: String, displayName: String, email: String) {
         val currentDate: String = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
@@ -257,20 +322,17 @@ class LoginActivity : BaseActivity() {
                     val login = response.body()
                     val status: Boolean = login?.status == "true"
 
-                    if (status){
+                    if (status) {
                         val userId = login?.response?.getOrNull(0)?.userId
                         if (login != null) {
-
-                            Log.e("Login_", userId.toString())
-
-                                session.loginUser(userId.toString(), displayName)
-                                val intent = Intent(context, RoomContactsActivity::class.java)
-                                intent.putExtra("userId", userId.toString())
-                                intent.putExtra("displayName", displayName)
-                                startActivity(intent)
-                                finish()
+                            session.loginUser(userId.toString(), displayName)
+                            val intent = Intent(this@LoginActivity, RoomContactsActivity::class.java)
+                            intent.putExtra("userId", userId.toString())
+                            intent.putExtra("displayName", displayName)
+                            startActivity(intent)
+                            finish()
                         }
-                    }else {
+                    } else {
                         showMessage(getString(R.string.login_failed))
                     }
                 } else {
@@ -287,18 +349,12 @@ class LoginActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-
-      if (currentUser != null){
-          startActivity(
-              Intent(
-                  this, RoomContactsActivity
-                  ::class.java
-              )
-          )
-          finish()
-      } else{
-          Log.e("GoogleSignIn_", "User is null")
-      }
+        if (currentUser != null) {
+            startActivity(Intent(this, RoomContactsActivity::class.java))
+            finish()
+        } else {
+            Log.d(TAG, "No current user")
+        }
     }
 
     private fun initTheme() {
@@ -310,29 +366,9 @@ class LoginActivity : BaseActivity() {
         val isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false)
 
         if (isDarkModeOn) {
-            AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_YES
-            )
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
-            AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_NO
-            )
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                openGoogleSignIn()
-                Log.d("GoogleSignIn", "Signed in successfully: ${account.email}")
-            } catch (e: ApiException) {
-                Log.e("GoogleSignIn", "Sign-in failed: ${e.statusCode}")
-            }
-        }
-    }
-
 }
